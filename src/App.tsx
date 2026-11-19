@@ -1,4 +1,4 @@
-import { FormEvent, MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent, ReactNode, useEffect, useState } from 'react';
+import { FormEvent, MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent, ReactNode, useEffect, useRef, useState } from 'react';
 import {
   ArrowRight,
   Building2,
@@ -325,9 +325,6 @@ function getRoute(): Route {
   return { type: 'home' };
 }
 
-// Site version shown in the header. Bump this by 1 on every update.
-const SITE_VERSION = 54;
-
 function navigate(path: string) {
   window.location.hash = path;
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -399,11 +396,17 @@ function goWhyUs() {
 function App() {
   const [route, setRoute] = useState<Route>(getRoute);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<'services' | 'areas' | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const headerRef = useRef<HTMLDivElement>(null);
   usePageTilt('.cp-stats-grid > div, .sv-item, .cp-step, .cp-other, .sv-pager-btn');
 
   useEffect(() => {
-    const onHashChange = () => setRoute(getRoute());
+    const onHashChange = () => {
+      setRoute(getRoute());
+      setMenuOpen(false);
+      setOpenDropdown(null);
+    };
     const onScroll = () => setIsScrolled(window.scrollY > 24);
     window.addEventListener('hashchange', onHashChange);
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -413,6 +416,28 @@ function App() {
       window.removeEventListener('scroll', onScroll);
     };
   }, []);
+
+  useEffect(() => {
+    if (!menuOpen && !openDropdown) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMenuOpen(false);
+        setOpenDropdown(null);
+      }
+    };
+    const onPointerDown = (e: PointerEvent) => {
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [menuOpen, openDropdown]);
 
   useEffect(() => {
     const brand = 'Xpress Waste Removals';
@@ -447,6 +472,7 @@ function App() {
   }, [route]);
 
   const lamp = (e: ReactMouseEvent<HTMLElement>) => {
+    if (window.innerWidth <= 800 || !window.matchMedia('(hover: hover)').matches) return;
     const box = e.currentTarget;
     const t = (e.target as Element).closest('.nav-links > button:not(.nav-cta), .nav-links > .nav-dropdown') as HTMLElement | null;
     if (!t) { box.classList.remove('lit'); return; }
@@ -454,27 +480,59 @@ function App() {
     box.style.setProperty('--lw', `${t.offsetWidth}px`);
     box.classList.add('lit');
   };
+  const closeNav = () => {
+    setMenuOpen(false);
+    setOpenDropdown(null);
+  };
+  const toggleMenu = () => {
+    setMenuOpen((v) => {
+      if (v) setOpenDropdown(null);
+      return !v;
+    });
+  };
+  const toggleDropdown = (key: 'services' | 'areas') => {
+    setOpenDropdown((cur) => (cur === key ? null : key));
+  };
   const onHome = route.type === 'home';
   const onServices = route.type === 'service' || route.type === 'services-index';
   const onAreas = route.type === 'area' || route.type === 'areas-index';
   return (
     <div className="site-shell">
       <ScrollProgress />
-      <div className={`header-sticky on-home ${isScrolled ? 'is-scrolled' : ''}`}>
+      <div ref={headerRef} className={`header-sticky on-home ${isScrolled ? 'is-scrolled' : ''} ${menuOpen ? 'menu-is-open' : ''}`}>
+        {menuOpen && <div className="nav-backdrop" onClick={closeNav} aria-hidden="true" />}
         <header className={`nav-wrap ${isScrolled ? 'is-scrolled' : ''}`}>
-        <nav className="nav container">
-          <button className="brand" onClick={() => navigate('/')} aria-label="Xpress Waste Removals home"><BrandLogo className="brand-logo" /><span className="ver-badge">v{SITE_VERSION}</span></button>
-          <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">{menuOpen ? <X /> : <Menu />}</button>
-          <div className={`nav-links ${menuOpen ? 'open' : ''}`} onMouseMove={lamp} onMouseLeave={(e) => e.currentTarget.classList.remove('lit')}>
-            <button className={onHome ? 'is-active' : undefined} aria-current={onHome ? 'page' : undefined} onClick={() => { navigate('/'); setMenuOpen(false); }}>Home</button>
-            <div className={`nav-dropdown${onServices ? ' is-active' : ''}`}><button>Services <ChevronDown size={14} /></button><div className="dropdown-panel"><button className="dropdown-all" onClick={() => { navigate('/services'); setMenuOpen(false); }}>All services</button>{services.map((service) => <button key={service.slug} onClick={() => { navigate(`/services/${service.slug}`); setMenuOpen(false); }}>{service.title}</button>)}</div></div>
-            <div className={`nav-dropdown${onAreas ? ' is-active' : ''}`}><button>Areas <ChevronDown size={14} /></button><div className="dropdown-panel"><button className="dropdown-all" onClick={() => { navigate('/areas'); setMenuOpen(false); }}>All areas</button>{areas.map((area) => <button key={area.slug} onClick={() => { navigate(`/areas/${area.slug}`); setMenuOpen(false); }}>{area.name}</button>)}</div></div>
-            <button onClick={() => { goWhyUs(); setMenuOpen(false); }}>Why Xpress</button>
-            <button className="nav-cta nav-cta-mobile" onClick={() => { navigate('/quote'); setMenuOpen(false); }}>Get a free quote <ArrowRight size={16} /></button>
+        <nav className="nav container" aria-label="Main navigation">
+          <button type="button" className="brand" onClick={() => { navigate('/'); closeNav(); }} aria-label="Xpress Waste Removals home"><BrandLogo className="brand-logo" /></button>
+          <button type="button" className="menu-toggle" onClick={toggleMenu} aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} aria-controls="mobile-nav-menu">{menuOpen ? <X size={22} /> : <Menu size={22} />}</button>
+          <div id="mobile-nav-menu" className={`nav-links ${menuOpen ? 'open' : ''}`} onMouseMove={lamp} onMouseLeave={(e) => e.currentTarget.classList.remove('lit')}>
+            <button type="button" className={onHome ? 'is-active' : undefined} aria-current={onHome ? 'page' : undefined} onClick={() => { navigate('/'); closeNav(); }}>Home</button>
+            <div className={`nav-dropdown${onServices ? ' is-active' : ''}${openDropdown === 'services' ? ' is-open' : ''}`}>
+              <button type="button" onClick={() => toggleDropdown('services')} aria-expanded={openDropdown === 'services'} aria-controls="nav-dd-services">
+                <span>Services</span>
+                <ChevronDown size={15} className="nav-chevron" />
+              </button>
+              <div id="nav-dd-services" className="dropdown-panel">
+                <button type="button" className="dropdown-all" onClick={() => { navigate('/services'); closeNav(); }}>All services</button>
+                {services.map((service) => <button type="button" key={service.slug} onClick={() => { navigate(`/services/${service.slug}`); closeNav(); }}>{service.title}</button>)}
+              </div>
+            </div>
+            <div className={`nav-dropdown${onAreas ? ' is-active' : ''}${openDropdown === 'areas' ? ' is-open' : ''}`}>
+              <button type="button" onClick={() => toggleDropdown('areas')} aria-expanded={openDropdown === 'areas'} aria-controls="nav-dd-areas">
+                <span>Areas</span>
+                <ChevronDown size={15} className="nav-chevron" />
+              </button>
+              <div id="nav-dd-areas" className="dropdown-panel">
+                <button type="button" className="dropdown-all" onClick={() => { navigate('/areas'); closeNav(); }}>All areas</button>
+                {areas.map((area) => <button type="button" key={area.slug} onClick={() => { navigate(`/areas/${area.slug}`); closeNav(); }}>{area.name}</button>)}
+              </div>
+            </div>
+            <button type="button" onClick={() => { goWhyUs(); closeNav(); }}>Why Xpress</button>
+            <button type="button" className="nav-cta nav-cta-mobile" onClick={() => { navigate('/quote'); closeNav(); }}>Get a free quote <ArrowRight size={16} /></button>
           </div>
           <div className="nav-actions">
             <a className="nav-phone" href={`tel:${PHONE}`}><span className="nav-phone-icon"><Phone size={16} /></span>{PHONE}</a>
-            <button className="nav-cta" onClick={() => navigate('/quote')}>Get a free quote <ArrowRight size={16} /></button>
+            <button type="button" className="nav-cta" onClick={() => { navigate('/quote'); closeNav(); }}>Get a free quote <ArrowRight size={16} /></button>
           </div>
         </nav>
       </header>
@@ -517,6 +575,7 @@ function HeroCollage() {
 }
 
 function heroSpot(event: ReactPointerEvent<HTMLElement>) {
+  if (event.pointerType !== 'mouse') return;
   const el = event.currentTarget;
   const r = el.getBoundingClientRect();
   el.style.setProperty('--hx', `${event.clientX - r.left}px`);
@@ -876,9 +935,6 @@ function AreasIndexPage() {
     <CTA /></>;
 }
 
-/** Quote requests are emailed to this address (via FormSubmit, no API key needed). */
-const QUOTE_EMAIL_ENDPOINT = 'https://formsubmit.co/ajax/abdullahspare786@gmail.com';
-
 function QuoteForm({ preset, presetPostcode, presetSize }: { preset?: string; presetPostcode?: string; presetSize?: string }) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -887,35 +943,9 @@ function QuoteForm({ preset, presetPostcode, presetSize }: { preset?: string; pr
   const update = (key: keyof typeof form, value: string) => setForm((current) => ({ ...current, [key]: value }));
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setError(''); setLoading(true);
-    // Backup copy in Supabase (optional: only if configured; never blocks the email).
-    if (import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY) {
-      void Promise.resolve(supabase.from('quote_requests').insert(form)).catch(() => undefined);
-    }
-    let sent = false;
-    try {
-      const response = await fetch(QUOTE_EMAIL_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          _subject: `New free quote request: ${form.service} (${form.postcode})`,
-          _template: 'table',
-          _honey: '',
-          'Full name': form.name,
-          'Phone number': form.phone,
-          'Email address': form.email,
-          Postcode: form.postcode,
-          Service: form.service,
-          Message: form.message || '(none)',
-          'Submitted at': new Date().toLocaleString('en-GB'),
-          email: form.email,
-        }),
-      });
-      const result = await response.json().catch(() => ({}));
-      sent = response.ok && result.success !== 'false' && result.success !== false;
-      if (!sent) console.error('Quote email failed:', response.status, result);
-    } catch (err) { sent = false; console.error('Quote email request failed:', err); }
+    const { error: insertError } = await supabase.from('quote_requests').insert(form);
     setLoading(false);
-    if (!sent) { setError(`We could not send that just now. Please call us on ${PHONE}.`); return; }
+    if (insertError) { setError(`We could not send that just now. Please call us on ${PHONE}.`); return; }
     setSubmitted(true);
   }
   if (submitted) return <div className="success-state"><span className="success-icon"><Check size={30} /></span><div className="eyebrow dark">Quote request received</div><h2>We’ll be in touch<br /><span>very soon.</span></h2><p>Thanks for choosing Xpress Waste Removals. A member of our team will contact you with your clear, no-obligation quote.</p><button className="button button-dark" onClick={() => { setSubmitted(false); setForm({ name: '', email: '', phone: '', postcode: '', service: '', message: '' }); }}>Send another request <ArrowRight size={17} /></button></div>;

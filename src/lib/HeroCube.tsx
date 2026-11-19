@@ -23,7 +23,7 @@ export function HeroCube({ onOpen }: { onOpen?: (slug: string) => void }) {
     const tilt = tiltRef.current;
     if (!host || !drag || !tilt) return;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let rx = 0, ry = 0, lx = 0, ly = 0, raf = 0, down = false;
+    let rx = 0, ry = 0, lx = 0, ly = 0, raf = 0, down = false, captured = false, touchAxis: '' | 'x' | 'y' = '';
     // double-click / double-tap on a face opens that service page
     let downSlug = '', sx = 0, sy = 0, lastSlug = '', lastT = 0;
 
@@ -31,13 +31,30 @@ export function HeroCube({ onOpen }: { onOpen?: (slug: string) => void }) {
     const schedule = () => { if (!raf) raf = requestAnimationFrame(apply); };
 
     const onDown = (e: PointerEvent) => {
-      down = true; lx = e.clientX; ly = e.clientY; sx = e.clientX; sy = e.clientY;
+      down = true; captured = false; touchAxis = '';
+      lx = e.clientX; ly = e.clientY; sx = e.clientX; sy = e.clientY;
       downSlug = (e.target as HTMLElement).closest<HTMLElement>('[data-slug]')?.dataset.slug ?? '';
-      try { host.setPointerCapture(e.pointerId); } catch { /* ignore */ }
-      host.classList.add('is-drag');
+      if (e.pointerType !== 'touch') {
+        try { host.setPointerCapture(e.pointerId); captured = true; } catch { /* ignore */ }
+        host.classList.add('is-drag');
+      }
     };
     const onMove = (e: PointerEvent) => {
       if (down) {
+        if (e.pointerType === 'touch') {
+          if (!touchAxis) {
+            const dx = Math.abs(e.clientX - sx);
+            const dy = Math.abs(e.clientY - sy);
+            if (dx < 6 && dy < 6) return;
+            touchAxis = dx >= dy ? 'x' : 'y';
+            if (touchAxis === 'x') {
+              try { host.setPointerCapture(e.pointerId); captured = true; } catch { /* ignore */ }
+              host.classList.add('is-drag');
+              lx = e.clientX; ly = e.clientY;
+            }
+          }
+          if (touchAxis === 'y') return; // let vertical scroll happen naturally
+        }
         ry += (e.clientX - lx) * 0.5;
         rx = Math.max(-60, Math.min(60, rx - (e.clientY - ly) * 0.5));
         lx = e.clientX; ly = e.clientY;
@@ -52,22 +69,34 @@ export function HeroCube({ onOpen }: { onOpen?: (slug: string) => void }) {
     };
     const onUp = (e: PointerEvent) => {
       const wasDown = down;
-      down = false; host.classList.remove('is-drag');
+      down = false; touchAxis = '';
+      if (captured) {
+        try { host.releasePointerCapture(e.pointerId); } catch { /* ignore */ }
+        captured = false;
+      }
+      host.classList.remove('is-drag');
       if (!wasDown || e.type !== 'pointerup' || !downSlug) return;
-      if (Math.hypot(e.clientX - sx, e.clientY - sy) > 8) { lastSlug = ''; return; } // it was a drag, not a tap
+      if (Math.hypot(e.clientX - sx, e.clientY - sy) > 10) { lastSlug = ''; return; } // it was a drag, not a tap
       const now = Date.now();
-      if (lastSlug === downSlug && now - lastT < 400) { lastSlug = ''; openRef.current?.(downSlug); }
+      if (lastSlug === downSlug && now - lastT < 450) { lastSlug = ''; openRef.current?.(downSlug); }
       else { lastSlug = downSlug; lastT = now; }
     };
     const onLeave = () => { if (!down) tilt.style.transform = ''; };
 
-    host.addEventListener('pointerdown', onDown);
-    host.addEventListener('pointermove', onMove);
+    // Pause continuous 3D spin when scrolled out of view to save GPU/battery
+    const obs = 'IntersectionObserver' in window
+      ? new IntersectionObserver(([en]) => host.classList.toggle('is-offscreen', !en.isIntersecting), { threshold: 0 })
+      : null;
+    obs?.observe(host);
+
+    host.addEventListener('pointerdown', onDown, { passive: true });
+    host.addEventListener('pointermove', onMove, { passive: true });
     host.addEventListener('pointerup', onUp);
     host.addEventListener('pointercancel', onUp);
     host.addEventListener('pointerleave', onLeave);
     return () => {
       if (raf) cancelAnimationFrame(raf);
+      obs?.disconnect();
       host.removeEventListener('pointerdown', onDown);
       host.removeEventListener('pointermove', onMove);
       host.removeEventListener('pointerup', onUp);

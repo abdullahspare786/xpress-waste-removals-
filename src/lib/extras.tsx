@@ -6,7 +6,7 @@ type Opt = { value: string; label: string };
 /** Site-wide extras: scroll-progress back-to-top ring and a quick-quote popover. */
 export function SiteExtras({ services, cities, onGo }: { services: Opt[]; cities: Opt[]; onGo: (path: string) => void }) {
   const panel = useRef<HTMLDivElement>(null);
-  const [pct, setPct] = useState(0);
+  const topBtn = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const [service, setService] = useState('');
   const [city, setCity] = useState('');
@@ -15,8 +15,12 @@ export function SiteExtras({ services, cities, onGo }: { services: Opt[]; cities
     let raf = 0;
     const update = () => {
       raf = 0;
+      const btn = topBtn.current;
+      if (!btn) return;
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      setPct(max > 0 ? Math.min(window.scrollY / max, 1) : 0);
+      const pct = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+      btn.style.setProperty('--p', `${Math.round(pct * 360)}deg`);
+      btn.classList.toggle('show', pct > 0.06);
     };
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -58,7 +62,7 @@ export function SiteExtras({ services, cities, onGo }: { services: Opt[]; cities
         </form>
       </div>
       <button type="button" className={`xd-quote ${open ? 'is-open' : ''}`} onClick={() => setOpen((v) => !v)} aria-expanded={open}><Zap size={16} /> Quick quote</button>
-      <button type="button" className={`xd-top ${pct > 0.06 ? 'show' : ''}`} style={{ ['--p' as string]: `${Math.round(pct * 360)}deg` }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} aria-label="Back to top"><span><ArrowUp size={18} /></span></button>
+      <button ref={topBtn} type="button" className="xd-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} aria-label="Back to top"><span><ArrowUp size={18} /></span></button>
     </div>
   </>;
 }

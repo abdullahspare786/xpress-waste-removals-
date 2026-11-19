@@ -3,9 +3,12 @@ import { useEffect, useRef, useState, type MouseEvent } from 'react';
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+const canHover = () =>
+  typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
 /** Cursor-following glow: sets --mx / --my (px) on the hovered element. */
 export function glowMove(e: MouseEvent<HTMLElement>) {
-  if (prefersReducedMotion()) return;
+  if (prefersReducedMotion() || !canHover()) return;
   const el = e.currentTarget;
   const r = el.getBoundingClientRect();
   el.style.setProperty('--mx', `${e.clientX - r.left}px`);
@@ -14,7 +17,7 @@ export function glowMove(e: MouseEvent<HTMLElement>) {
 
 /** 3D tilt + glow: sets --rx / --ry (deg) plus the glow position. */
 export function tiltMove(e: MouseEvent<HTMLElement>) {
-  if (prefersReducedMotion()) return;
+  if (prefersReducedMotion() || !canHover()) return;
   glowMove(e);
   const el = e.currentTarget;
   const r = el.getBoundingClientRect();
@@ -31,7 +34,7 @@ export function tiltLeave(e: MouseEvent<HTMLElement>) {
 
 /** Magnetic pull: nudges a button a few px towards the cursor (sets --tx / --ty). */
 export function magnetMove(e: MouseEvent<HTMLElement>) {
-  if (prefersReducedMotion()) return;
+  if (prefersReducedMotion() || !canHover()) return;
   const el = e.currentTarget;
   const r = el.getBoundingClientRect();
   el.style.setProperty('--tx', `${(((e.clientX - r.left) / r.width - 0.5) * 12).toFixed(1)}px`);

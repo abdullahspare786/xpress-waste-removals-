@@ -69,7 +69,3 @@ If you use the GitHub website upload instead, upload the contents of this folder
 ## Important notes
 - Supabase: the policies in `supabase/migrations` currently allow public read, update and delete on `quote_requests`. Restrict them to insert-only for the public before going live, otherwise customer details are exposed.
 - Phone: set `const PHONE = 'REPLACE_ME'` near the top of `src/App.tsx`. Email and social links are also placeholders.
-
-## Quote form emails
-The free quote form emails every request (name, phone, email, postcode, service, message) to abdullahspare786@gmail.com using FormSubmit. No API key needed. To change the address, edit `QUOTE_EMAIL_ENDPOINT` in `src/App.tsx`.
-**First time only:** submit one test quote after going live, then open the "Activate FormSubmit" email that arrives in that inbox and click the confirm button. Check Spam too. Supabase is now an optional backup copy.
