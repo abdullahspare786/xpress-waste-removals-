@@ -2159,11 +2159,11 @@ a, button, summary, input, select, textarea, label {
   position: relative;
   border-radius: 999px;
   pointer-events: auto;
-  background: linear-gradient(135deg, rgba(255, 255, 255, .62), rgba(223, 241, 255, .52)) !important;
-  -webkit-backdrop-filter: saturate(160%) blur(10px);
-  backdrop-filter: saturate(160%) blur(10px);
-  border: 1px solid rgba(255, 255, 255, .62);
-  box-shadow: 0 12px 28px -14px rgba(11, 27, 51, .35), inset 0 1px 0 rgba(255, 255, 255, .7) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, .78), rgba(232, 244, 255, .72)) !important;
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  backdrop-filter: saturate(180%) blur(16px);
+  border: 1px solid rgba(255, 255, 255, .75);
+  box-shadow: 0 12px 28px -14px rgba(11, 27, 51, .35), inset 0 1px 0 rgba(255, 255, 255, .8) !important;
   animation: none !important;
 }
 .header-sticky.is-scrolled .nav.container::before,
@@ -2196,6 +2196,16 @@ a, button, summary, input, select, textarea, label {
   .header-sticky .nav-dropdown:hover > button .nav-chevron,
   .header-sticky .nav-dropdown.is-open > button .nav-chevron {
     transform: rotate(180deg);
+  }
+  .header-sticky .dropdown-panel {
+    background: rgba(11, 27, 51, .92);
+    -webkit-backdrop-filter: saturate(160%) blur(18px);
+    backdrop-filter: saturate(160%) blur(18px);
+  }
+  .header-sticky.is-scrolled .dropdown-panel {
+    background: rgba(255, 255, 255, .93);
+    -webkit-backdrop-filter: saturate(180%) blur(18px);
+    backdrop-filter: saturate(180%) blur(18px);
   }
 }
 

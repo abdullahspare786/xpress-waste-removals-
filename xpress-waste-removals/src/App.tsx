@@ -30,7 +30,7 @@ import { HeroCube } from '@/lib/HeroCube';
 import { BrandLogo } from '@/lib/BrandLogo';
 
 // TODO: replace with your real phone number (digits only, e.g. '02476123456')
-const PHONE = 'REPLACE_ME';
+const PHONE = '07418628510';
 
 type Route = { type: 'home' | 'quote' | 'service' | 'area' | 'services-index' | 'areas-index'; slug?: string; service?: string; postcode?: string; size?: string };
 
@@ -507,7 +507,7 @@ function App() {
           <button type="button" className="menu-toggle" onClick={toggleMenu} aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} aria-controls="mobile-nav-menu">{menuOpen ? <X size={22} /> : <Menu size={22} />}</button>
           <div id="mobile-nav-menu" className={`nav-links ${menuOpen ? 'open' : ''}`} onMouseMove={lamp} onMouseLeave={(e) => e.currentTarget.classList.remove('lit')}>
             <button type="button" className={onHome ? 'is-active' : undefined} aria-current={onHome ? 'page' : undefined} onClick={() => { navigate('/'); closeNav(); }}>Home</button>
-            <div className={`nav-dropdown${onServices ? ' is-active' : ''}${openDropdown === 'services' ? ' is-open' : ''}`}>
+            <div className={`nav-dropdown${onServices ? ' is-active' : ''}${openDropdown === 'services' ? ' is-open' : ''}`} onMouseEnter={() => { if (openDropdown && openDropdown !== 'services') setOpenDropdown(null); }}>
               <button type="button" onClick={() => toggleDropdown('services')} aria-expanded={openDropdown === 'services'} aria-controls="nav-dd-services">
                 <span>Services</span>
                 <ChevronDown size={15} className="nav-chevron" />
@@ -517,7 +517,7 @@ function App() {
                 {services.map((service) => <button type="button" key={service.slug} onClick={() => { navigate(`/services/${service.slug}`); closeNav(); }}>{service.title}</button>)}
               </div>
             </div>
-            <div className={`nav-dropdown${onAreas ? ' is-active' : ''}${openDropdown === 'areas' ? ' is-open' : ''}`}>
+            <div className={`nav-dropdown${onAreas ? ' is-active' : ''}${openDropdown === 'areas' ? ' is-open' : ''}`} onMouseEnter={() => { if (openDropdown && openDropdown !== 'areas') setOpenDropdown(null); }}>
               <button type="button" onClick={() => toggleDropdown('areas')} aria-expanded={openDropdown === 'areas'} aria-controls="nav-dd-areas">
                 <span>Areas</span>
                 <ChevronDown size={15} className="nav-chevron" />
