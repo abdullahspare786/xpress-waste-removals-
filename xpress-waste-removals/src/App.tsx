@@ -29,8 +29,8 @@ import { PrepChecklist, SiteExtras } from '@/lib/extras';
 import { HeroCube } from '@/lib/HeroCube';
 import { BrandLogo } from '@/lib/BrandLogo';
 
-// TODO: replace with your real phone number (digits only, e.g. '02476123456')
 const PHONE = '07418628510';
+const SITE_URL = 'https://www.xpresswasteremoval.co.uk';
 
 type Route = { type: 'home' | 'quote' | 'service' | 'area' | 'services-index' | 'areas-index'; slug?: string; service?: string; postcode?: string; size?: string };
 
@@ -247,10 +247,12 @@ const howSteps = [
 ];
 
 const homeFaqs = [
-  { q: 'How quickly can you collect?', a: 'Tell us when suits you in your quote request and we will do our best to fit it in.' },
-  { q: 'Is the quote really free?', a: 'Yes. Quotes are free and come with no obligation.' },
-  { q: 'What happens to my rubbish?', a: 'Reuse comes first. We donate what we can, recycle what we can, and only send the rest to proper disposal facilities.' },
-  { q: 'Which areas do you cover?', a: 'Coventry, Leicester and Birmingham, plus the surrounding postcodes. If you are close by, just ask.' },
+  { q: 'How quickly can you collect my rubbish?', a: 'We offer same-day and next-day rubbish removal across Coventry, Leicester and Birmingham, 7 days a week. Tell us your postcode and preferred time in the free quote form and we will fit you in.' },
+  { q: 'Is man and van waste removal better than hiring a skip?', a: 'Yes — for most UK homes and businesses it is faster, easier and often cheaper than skip hire. There is no council skip permit to arrange, no heavy lifting for you, no skip blocking your driveway, and you only pay for the exact space your waste uses.' },
+  { q: 'How much does rubbish removal cost?', a: 'Pricing is based on the volume and type of waste, with no hidden fees. Request a free, no-obligation quote with your postcode and a quick description or photo, and we will give you a clear upfront price before we start.' },
+  { q: 'Are you an Environment Agency licensed waste carrier?', a: 'Yes. Xpress Waste Removals is a licensed UK waste carrier and is fully insured. Every load is handled legally and responsibly, and Waste Transfer Notes are available for commercial and residential jobs.' },
+  { q: 'What happens to the rubbish you collect?', a: 'Reuse and recycling come first. We donate reusable furniture and household items where possible, recycle wood, metal, cardboard, WEEE electricals and green waste, and keep as much as possible out of UK landfill.' },
+  { q: 'Which UK areas and postcodes do you cover?', a: 'We cover all of Coventry (CV postcodes), Leicester and Leicestershire (LE postcodes), and Birmingham and the West Midlands (B postcodes), plus nearby surrounding towns. If you are close by, just ask.' },
 ];
 
 const loadSizes = [
@@ -288,7 +290,7 @@ function LoadGuide() {
   return <section className="section load-section"><div className="container load-layout"><div><div className="eyebrow dark">Size it up</div><h2>How much<br /><span>needs to go?</span></h2><p>Get a feel for your load in seconds. Pick the closest match and we’ll pass it on with your quote request.</p><div className="load-options">{loadSizes.map((item) => <button key={item.key} className={item.key === size ? 'active' : ''} onClick={() => setSize(item.key)}><strong>{item.label}</strong><small>{item.van}</small></button>)}</div></div><div className="load-card"><div className="load-van" aria-hidden="true"><div className="load-van-bed"><div className="load-van-fill" style={{ width: `${current.fill}%` }} /></div><div className="load-van-cab"><Truck size={26} /></div></div><div className="load-meta"><span className="load-pct">{current.van}</span><p>{current.text}</p></div><button className="button button-primary full-button" onClick={() => navigate(`/quote?size=${current.key}`)}>Get a quote for this load <ArrowRight size={17} /></button></div></div></section>;
 }
 
-function InnerHeroVisual({ main, small, badge, map }: { main: string; small: string; map?: { slug: string; name: string }; badge: { icon: ReactNode; title: string; text: string } }) {
+function InnerHeroVisual({ main, small, badge, map, alt }: { main: string; small: string; map?: { slug: string; name: string }; badge: { icon: ReactNode; title: string; text: string }; alt?: string }) {
   const aim = (e: ReactPointerEvent<HTMLElement>) => {
     if (e.pointerType !== 'mouse') return;
     const el = e.currentTarget;
@@ -302,8 +304,8 @@ function InnerHeroVisual({ main, small, badge, map }: { main: string; small: str
     <i className="hx-gem g1" aria-hidden="true" /><i className="hx-gem g2" aria-hidden="true" /><i className="hx-gem g3" aria-hidden="true" />
     {map
       ? <div className="hx-photo hx-main hx-map"><CityMap slug={map.slug} name={map.name} large /></div>
-      : <div className="hx-photo hx-main"><img className="active" src={main} alt="" width={1100} height={620} decoding="async" loading="eager" /></div>}
-    <div className="hx-photo hx-small"><img src={small} alt="" width={400} height={400} loading="lazy" decoding="async" /></div>
+      : <div className="hx-photo hx-main"><img className="active" src={main} alt={alt ?? `${badge.text} by Xpress Waste Removals UK`} width={1100} height={620} decoding="async" loading="eager" /></div>}
+    <div className="hx-photo hx-small"><img src={small} alt="Xpress Waste Removals UK local clearance crew" width={400} height={400} loading="lazy" decoding="async" /></div>
     <div className="hx-badge hx-b1"><span className="hx-ic"><FileCheck2 size={20} /></span><div><strong>Free quote</strong><small>No obligation</small></div></div>
     <div className="hx-badge hx-b2"><span className="hx-ic hx-green">{badge.icon}</span><div><strong>{badge.title}</strong><small>{badge.text}</small></div></div>
     <div className="hx-badge hx-b3"><span className="hx-ic"><MapPin size={20} /></span><div><strong>Local team</strong><small>Coventry · Leicester · Birmingham</small></div></div>
@@ -311,40 +313,59 @@ function InnerHeroVisual({ main, small, badge, map }: { main: string; small: str
 }
 
 function getRoute(): Route {
-  const hash = window.location.hash.replace('#', '') || '/';
-  if (hash.startsWith('/quote')) {
-    const query = hash.split('?')[1] ?? '';
+  // Support legacy /#/ hash URLs cleanly by migrating them to clean SEO URLs
+  let rawPath = window.location.pathname + window.location.search;
+  if (window.location.hash.startsWith('#/')) {
+    rawPath = window.location.hash.slice(1);
+    try { window.history.replaceState(null, '', rawPath); } catch { /* ignore */ }
+  }
+  const [rawPlain, query = ''] = rawPath.split('?');
+  const plain = (rawPlain || '/').replace(/\/+$/, '') || '/';
+  if (plain === '/quote') {
     const params = new URLSearchParams(query);
     return { type: 'quote', slug: params.get('service') ?? undefined, postcode: params.get('postcode') ?? undefined, size: params.get('size') ?? undefined };
   }
-  const plain = hash.split('?')[0].replace(/\/+$/, '');
   if (plain === '/services') return { type: 'services-index' };
   if (plain === '/areas') return { type: 'areas-index' };
-  if (hash.startsWith('/services/')) return { type: 'service', slug: hash.split('/')[2] };
-  if (hash.startsWith('/areas/')) { const parts = hash.split('?')[0].split('/'); return { type: 'area', slug: parts[2], service: parts[3] }; }
+  if (plain.startsWith('/services/')) return { type: 'service', slug: plain.split('/')[2] };
+  if (plain.startsWith('/areas/')) { const parts = plain.split('/'); return { type: 'area', slug: parts[2], service: parts[3] }; }
   return { type: 'home' };
 }
 
 function navigate(path: string) {
-  window.location.hash = path;
+  const clean = path.startsWith('/') ? path : `/${path}`;
+  if (window.location.pathname + window.location.search !== clean) {
+    window.history.pushState(null, '', clean);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+function onSpaLink(path: string, extra?: () => void) {
+  return (e: ReactMouseEvent<HTMLAnchorElement>) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    e.preventDefault();
+    navigate(path);
+    extra?.();
+  };
+}
+
 const whyPoints = [
-  { icon: ClipboardList, title: 'Clear, upfront pricing', text: 'No hidden fees. No awkward surprises. You know the price before we start.' },
-  { icon: Truck, title: 'We do the heavy lifting', text: 'From the loft to the garden, we load, carry and clear it all for you.' },
-  { icon: Recycle, title: 'Reuse before landfill', text: 'We donate and recycle wherever possible, and sort every load responsibly.' },
-  { icon: ShieldCheck, title: 'Licensed and fully insured', text: 'A licensed waste carrier, so your waste is handled legally and with care.' },
-  { icon: MapPin, title: 'Local to your area', text: 'Serving Coventry, Leicester and Birmingham, including nearby areas.' },
-  { icon: Smile, title: 'Friendly, on-time service', text: 'We arrive when we say we will and treat your space with respect.' },
+  { icon: ClipboardList, title: 'Clear, upfront UK pricing', text: 'No hidden fees or skip permits. Pay only for the volume of waste we remove, agreed before we start.' },
+  { icon: Truck, title: 'Easier than skip hire', text: 'From lofts to gardens, our two-person man-and-van crew does all the heavy lifting, loading and sweeping.' },
+  { icon: Recycle, title: 'Reuse & recycle first', text: 'We donate usable furniture and sort every load responsibly to divert maximum waste from UK landfill.' },
+  { icon: ShieldCheck, title: 'Environment Agency licensed', text: 'Fully insured, licensed UK waste carrier with Waste Transfer Notes for complete peace of mind.' },
+  { icon: MapPin, title: 'Local Midlands crews', text: 'Fast coverage across Coventry (CV), Leicester (LE), Birmingham (B) and surrounding areas.' },
+  { icon: Smile, title: 'Same-day & 7-day slots', text: 'Flexible weekday, evening and weekend waste collections — arriving on time and leaving your space spotless.' },
 ];
 
 const whyFaqs = [
-  { q: 'Is Xpress Waste Removals a licensed waste carrier?', a: 'Yes. Xpress Waste Removals is a licensed waste carrier and is fully insured, so your rubbish is collected and disposed of legally and responsibly.' },
-  { q: 'Which areas does Xpress Waste Removals cover?', a: 'We provide rubbish removal in Coventry, Leicester and Birmingham, including nearby areas. Add your postcode to the free quote form and we will confirm coverage.' },
-  { q: 'What kinds of rubbish can you remove?', a: 'We handle house clearances, garden waste, furniture and appliance removal, office and commercial clearances, moving help, and recycling and responsible disposal.' },
-  { q: 'Do you recycle the waste you collect?', a: 'Yes. We reuse, donate and recycle wherever possible before anything is sent for disposal.' },
-  { q: 'How do I get a price for rubbish removal?', a: 'Request a free quote online with your postcode and what needs to go. Our pricing is clear and upfront, with no hidden fees.' },
+  { q: 'Is Xpress Waste Removals an Environment Agency licensed waste carrier?', a: 'Yes. Xpress Waste Removals is an Environment Agency licensed UK waste carrier and is fully insured, so your household or commercial rubbish is collected and disposed of legally and responsibly.' },
+  { q: 'Which UK areas does Xpress Waste Removals cover?', a: 'We provide same-day and scheduled rubbish removal in Coventry (all CV postcodes), Leicester (all LE postcodes) and Birmingham (all B postcodes), plus nearby Midlands towns. Add your postcode to the free quote form and we will confirm coverage.' },
+  { q: 'Why choose Xpress Waste Removals instead of skip hire?', a: 'Our wait-and-load man and van waste clearance requires no council skip permit, does not block your driveway, and includes all heavy lifting and sweeping up — making it faster and often cheaper than hiring a skip.' },
+  { q: 'What kinds of rubbish and waste can you remove?', a: 'We handle full and partial house clearances, garden waste removal, furniture and appliance disposal (sofas, beds, fridges, white goods), office and commercial clearances, local moving help, and responsible recycling.' },
+  { q: 'Do you recycle the waste you collect?', a: 'Yes. We reuse, donate and recycle wherever possible — sorting wood, metal, cardboard, WEEE electricals and green waste before anything is sent for disposal.' },
+  { q: 'How do I get a price for rubbish removal?', a: 'Request a free quote online with your postcode and what needs to go, or call 07418628510. Our pricing is clear and upfront, with no hidden fees and no obligation.' },
 ];
 
 function WhyXpress() {
@@ -359,21 +380,21 @@ function WhyXpress() {
     <div className="container why-grid">
       <div className="why-visual reveal-up">
         <div className="why-photo">
-          <img src="/hero-crew.webp" alt="Xpress Waste Removals crew loading a van during a rubbish collection" loading="lazy" decoding="async" />
+          <img src="/hero-crew.webp" alt="Xpress Waste Removals UK crew loading a van during a rubbish collection in the Midlands" loading="lazy" decoding="async" />
         </div>
-        <div className="why-badge why-badge-top"><span><ShieldCheck size={18} /></span><div><strong>Licensed waste carrier</strong><small>Fully insured</small></div></div>
+        <div className="why-badge why-badge-top"><span><ShieldCheck size={18} /></span><div><strong>Licensed waste carrier</strong><small>Environment Agency registered</small></div></div>
         <div className="why-badge why-badge-bottom"><span><Recycle size={18} /></span><div><strong>Reuse before landfill</strong><small>Sorted responsibly</small></div></div>
       </div>
       <div className="why-copy">
         <div className="eyebrow dark">Why choose Xpress Waste Removals</div>
         <h2 id="why-heading">We leave things<br /><span>better than we found them.</span></h2>
-        <p className="why-lead">Xpress Waste Removals is a licensed, fully insured rubbish removal company serving Coventry, Leicester and Birmingham. We arrive when we say we will, treat your space with care, and sort every load responsibly.</p>
+        <p className="why-lead">Xpress Waste Removals is an Environment Agency licensed, fully insured UK rubbish removal company serving Coventry, Leicester and Birmingham. Faster and easier than skip hire, our local crews arrive on time, do all the lifting, and recycle every load responsibly.</p>
         <ul className="why-points">
           {whyPoints.map((point) => { const Icon = point.icon; return <li key={point.title} className="reveal-up"><span className="why-icon"><Icon size={20} /></span><div><h3>{point.title}</h3><p>{point.text}</p></div></li>; })}
         </ul>
         <div className="why-actions">
           <button className="button button-primary" onClick={() => navigate('/quote')}>Get a free quote <ArrowRight size={17} /></button>
-          <div className="why-cities"><span>We cover</span>{areas.map((area) => <a key={area.slug} href={`#/areas/${area.slug}`}><MapPin size={13} /> {area.name}</a>)}</div>
+          <div className="why-cities"><span>We cover</span>{areas.map((area) => <a key={area.slug} href={`/areas/${area.slug}`} onClick={onSpaLink(`/areas/${area.slug}`)}><MapPin size={13} /> {area.name}</a>)}</div>
         </div>
       </div>
     </div>
@@ -388,8 +409,9 @@ function WhyXpress() {
 
 function goWhyUs() {
   const scroll = () => document.getElementById('why-us')?.scrollIntoView({ behavior: 'smooth' });
-  if ((window.location.hash.replace('#', '') || '/') === '/') { scroll(); return; }
-  window.location.hash = '/';
+  if ((window.location.pathname || '/') === '/') { scroll(); return; }
+  window.history.pushState(null, '', '/');
+  window.dispatchEvent(new PopStateEvent('popstate'));
   setTimeout(scroll, 150);
 }
 
@@ -402,17 +424,19 @@ function App() {
   usePageTilt('.cp-stats-grid > div, .sv-item, .cp-step, .cp-other, .sv-pager-btn');
 
   useEffect(() => {
-    const onHashChange = () => {
+    const onRouteChange = () => {
       setRoute(getRoute());
       setMenuOpen(false);
       setOpenDropdown(null);
     };
     const onScroll = () => setIsScrolled(window.scrollY > 24);
-    window.addEventListener('hashchange', onHashChange);
+    window.addEventListener('popstate', onRouteChange);
+    window.addEventListener('hashchange', onRouteChange);
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
     return () => {
-      window.removeEventListener('hashchange', onHashChange);
+      window.removeEventListener('popstate', onRouteChange);
+      window.removeEventListener('hashchange', onRouteChange);
       window.removeEventListener('scroll', onScroll);
     };
   }, []);
@@ -441,34 +465,68 @@ function App() {
 
   useEffect(() => {
     const brand = 'Xpress Waste Removals';
-    let title = `${brand} | Rubbish removal in Coventry, Leicester & Birmingham`;
-    if (route.type === 'quote') title = `Free quote | ${brand}`;
-    if (route.type === 'service') title = `${services.find((x) => x.slug === route.slug)?.title ?? 'Services'} | ${brand}`;
-    if (route.type === 'area') title = `Rubbish removal in ${areas.find((x) => x.slug === route.slug)?.name ?? 'your area'} | ${brand}`;
-    let description: string | undefined;
+    let title = `${brand} UK | Same-Day Rubbish Removal & House Clearance`;
+    let description = `Licensed, fully insured UK waste removal & rubbish clearance across Coventry, Leicester & Birmingham. Same-day house, garden, furniture & commercial clearances — cheaper & easier than skip hire. Call ${PHONE} for a free quote.`;
+    let canonicalPath = '/';
+
     const cityMatch = areas.find((x) => x.slug === route.slug);
     const serviceMatch = services.find((x) => x.slug === route.service);
-    if (route.type === 'area' && cityMatch && serviceMatch) {
-      title = `${serviceMatch.title} in ${cityMatch.name} | ${brand}`;
-      description = `${serviceMatch.title} in ${cityMatch.name} from Xpress Waste Removals. Licensed, fully insured and covering every ${areaDetails[cityMatch.slug].prefix} postcode. Get a free, no-obligation quote with clear upfront pricing.`;
+    const singleService = services.find((x) => x.slug === route.slug);
+
+    if (route.type === 'quote') {
+      title = `Free Waste Removal Quote UK | Clear Upfront Pricing | ${brand}`;
+      description = `Request a free, no-obligation rubbish removal quote across Coventry, Leicester and Birmingham. Same-day collections, no hidden fees. Call ${PHONE} or book online.`;
+      canonicalPath = '/quote';
+    } else if (route.type === 'services-index') {
+      title = `Waste Removal Services UK | House, Garden & Commercial Clearance | ${brand}`;
+      description = 'Full UK waste removal services: house clearance, garden waste removal, furniture & appliance disposal, office clearance, moving help & recycling across Coventry, Leicester & Birmingham.';
+      canonicalPath = '/services';
+    } else if (route.type === 'areas-index') {
+      title = `Areas We Cover | Rubbish Removal Coventry, Leicester & Birmingham | ${brand}`;
+      description = 'Environment Agency licensed rubbish removal across every CV, LE and B postcode in Coventry, Leicester and Birmingham. Same-day waste clearance & free upfront quotes.';
+      canonicalPath = '/areas';
+    } else if (route.type === 'service' && singleService) {
+      title = `${singleService.title} UK | Coventry, Leicester & Birmingham | ${brand}`;
+      description = `Licensed ${singleService.title.toLowerCase()} across Coventry, Leicester and Birmingham. ${singleService.description} Faster than skip hire — call ${PHONE} for a free quote.`;
+      canonicalPath = `/services/${singleService.slug}`;
+    } else if (route.type === 'area' && cityMatch && serviceMatch) {
+      title = `${serviceMatch.title} in ${cityMatch.name} | Same-Day Waste Clearance | ${brand}`;
+      description = `Licensed ${serviceMatch.title.toLowerCase()} in ${cityMatch.name} covering every ${areaDetails[cityMatch.slug].prefix} postcode. Faster & easier than skip hire, with clear upfront pricing. Call ${PHONE} for a free quote.`;
+      canonicalPath = `/areas/${cityMatch.slug}/${serviceMatch.slug}`;
     } else if (route.type === 'area' && cityMatch) {
-      description = `Rubbish removal in ${cityMatch.name} from Xpress Waste Removals. House clearance, garden waste, furniture and appliance removal and more across every ${areaDetails[cityMatch.slug].prefix} postcode. Free quote.`;
-    } else if (route.type === 'service' && serviceMatch) {
-      description = `${serviceMatch.title} across Coventry, Leicester and Birmingham. ${serviceMatch.description} Free, no-obligation quote.`;
+      title = `Rubbish Removal ${cityMatch.name} | Same-Day Waste Clearance (${areaDetails[cityMatch.slug].prefix}) | ${brand}`;
+      description = `Licensed rubbish removal & house clearance in ${cityMatch.name} across all ${areaDetails[cityMatch.slug].prefix} postcodes. Garden waste, furniture disposal & commercial clearances — free quote on ${PHONE}.`;
+      canonicalPath = `/areas/${cityMatch.slug}`;
     }
-    if (route.type === 'services-index') {
-      title = `Our services | ${brand}`;
-      description = 'All Xpress Waste Removals services: house clearance, garden waste removal, furniture and appliance removal, moving help, office and commercial clearance, and recycling. Free quote across Coventry, Leicester and Birmingham.';
-    }
-    if (route.type === 'areas-index') {
-      title = `Areas we cover | ${brand}`;
-      description = 'Xpress Waste Removals covers every area of Coventry, Leicester and Birmingham. Find your city, see the services available locally and get a free, no-obligation quote.';
-    }
+
+    const canonicalUrl = `${SITE_URL}${canonicalPath}`;
     document.title = title;
-    let meta = document.querySelector('meta[name="description"]');
-    if (!meta) { meta = document.createElement('meta'); meta.setAttribute('name', 'description'); document.head.appendChild(meta); }
-    if (!meta.getAttribute('data-orig')) meta.setAttribute('data-orig', meta.getAttribute('content') ?? '');
-    meta.setAttribute('content', description ?? meta.getAttribute('data-orig') ?? '');
+
+    const setMeta = (selector: string, attr: 'name' | 'property', key: string, content: string) => {
+      let el = document.querySelector(selector);
+      if (!el) { el = document.createElement('meta'); el.setAttribute(attr, key); document.head.appendChild(el); }
+      el.setAttribute('content', content);
+    };
+    const setLink = (selector: string, rel: string, href: string, hreflang?: string) => {
+      let el = document.querySelector(selector);
+      if (!el) {
+        el = document.createElement('link');
+        el.setAttribute('rel', rel);
+        if (hreflang) el.setAttribute('hreflang', hreflang);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('href', href);
+    };
+
+    setMeta('meta[name="description"]', 'name', 'description', description);
+    setMeta('meta[property="og:title"]', 'property', 'og:title', title);
+    setMeta('meta[property="og:description"]', 'property', 'og:description', description);
+    setMeta('meta[property="og:url"]', 'property', 'og:url', canonicalUrl);
+    setMeta('meta[name="twitter:title"]', 'name', 'twitter:title', title);
+    setMeta('meta[name="twitter:description"]', 'name', 'twitter:description', description);
+    setLink('link[rel="canonical"]', 'canonical', canonicalUrl);
+    setLink('link[rel="alternate"][hreflang="en-GB"]', 'alternate', canonicalUrl, 'en-GB');
+    setLink('link[rel="alternate"][hreflang="x-default"]', 'alternate', canonicalUrl, 'x-default');
   }, [route]);
 
   const lamp = (e: ReactMouseEvent<HTMLElement>) => {
@@ -600,7 +658,7 @@ function Home() {
         <div className="hx-copy">
           <div className="eyebrow"><span className="eyebrow-dot" /> Local, reliable &amp; responsible</div>
           <h1 className="hx-title"><span className="hx-line"><span>Clear the clutter.</span></span><span className="hx-line"><em>Get your space back.</em></span></h1>
-          <p>From a single sofa to a full house clear-out, our local Midlands crew does the lifting, loading and sorting. We reuse and recycle first, with a clear upfront price and zero fuss.</p>
+          <p>Fast, Environment Agency licensed UK rubbish removal across Coventry, Leicester and Birmingham. From a single sofa to a full house clearance, our local crew does all the lifting, loading and recycling — easier and often cheaper than skip hire.</p>
           <RotatingWord />
           <form className="hx-quote" onSubmit={quickQuote}>
             <label><span>Your postcode</span><input name="postcode" value={quickPostcode} onChange={(event) => setQuickPostcode(event.target.value)} placeholder="e.g. CV1 1AA" autoComplete="postal-code" autoCapitalize="characters" /></label>
@@ -629,9 +687,9 @@ function Home() {
   </>;
 }
 
-function ServiceCard({ service, index, photo }: { service: Service; index: number; photo?: string }) {
+function ServiceCard({ service, photo }: { service: Service; index?: number; photo?: string }) {
   const Icon = service.icon;
-  return <button className={`service-card accent-${service.accent}`} onClick={() => navigate(`/services/${service.slug}`)} onMouseMove={tiltMove} onMouseLeave={tiltLeave}>{photo && <span className="service-photo"><img src={photo} alt="" width={760} height={570} loading="lazy" decoding="async" /></span>}<span className="service-icon"><Icon size={25} /></span><span className="service-title">{service.title}</span><span className="service-description">{service.description}</span><span className="service-link">Find out more <ArrowUpRightIcon /></span></button>;
+  return <button className={`service-card accent-${service.accent}`} onClick={() => navigate(`/services/${service.slug}`)} onMouseMove={tiltMove} onMouseLeave={tiltLeave}>{photo && <span className="service-photo"><img src={photo} alt={`${service.title} in Coventry, Leicester and Birmingham — Xpress Waste Removals UK`} width={760} height={570} loading="lazy" decoding="async" /></span>}<span className="service-icon"><Icon size={25} /></span><span className="service-title">{service.title}</span><span className="service-description">{service.description}</span><span className="service-link">Find out more <ArrowUpRightIcon /></span></button>;
 }
 
 function ArrowUpRightIcon() { return <ArrowRight size={16} />; }
@@ -708,7 +766,7 @@ function ServicePage({ slug }: { slug?: string }) {
   const jumps = [['sv-included', 'What’s included'], ...(detail ? [['sv-items', 'Typical items']] : []), ...(guide ? [['sv-guide', 'Guide']] : []), ['sv-prep', 'Before you book'], ['sv-why', 'Why Xpress'], ['sv-quote', 'Free quote'], ...(detail ? [['sv-faq', 'FAQs']] : [])];
   const spy = useScrollSpy(jumps.map(([id]) => id));
   return <>
-    <section className="hero hero-x hero-inner"><div className="container hx-grid"><div className="hx-copy"><div className="eyebrow"><span className="eyebrow-dot" /> {service.eyebrow}</div><div className="breadcrumb"><a href="#/">Home</a> <ChevronRight size={14} /> <a href="#/services">Services</a> <ChevronRight size={14} /> {service.title}</div><h1>{service.title}<br /><em>made simple.</em></h1><p>{service.description}</p><div className="hero-actions tight"><button className="button button-primary" onClick={() => navigate(`/quote?service=${service.slug}`)}>Get a free quote <ArrowRight size={18} /></button><a className="hero-phone" href={`tel:${PHONE}`}><Phone size={16} /> {PHONE}</a></div><div className="hero-points"><span><ShieldCheck size={15} /> Free no-obligation quote</span><span><Zap size={15} /> Clear upfront pricing</span><span><Recycle size={15} /> Recycled where possible</span></div></div><InnerHeroVisual main={serviceHeroImages[service.slug]} small={heroSlides[serviceIndex % heroSlides.length]} badge={{ icon: <Icon size={20} />, title: 'Handled with care', text: service.title }} /></div></section>
+    <section className="hero hero-x hero-inner"><div className="container hx-grid"><div className="hx-copy"><div className="eyebrow"><span className="eyebrow-dot" /> {service.eyebrow}</div><div className="breadcrumb"><a href="/" onClick={onSpaLink('/')}>Home</a> <ChevronRight size={14} /> <a href="/services" onClick={onSpaLink('/services')}>Services</a> <ChevronRight size={14} /> {service.title}</div><h1>{service.title}<br /><em>made simple.</em></h1><p>{service.description}</p><div className="hero-actions tight"><button className="button button-primary" onClick={() => navigate(`/quote?service=${service.slug}`)}>Get a free quote <ArrowRight size={18} /></button><a className="hero-phone" href={`tel:${PHONE}`}><Phone size={16} /> {PHONE}</a></div><div className="hero-points"><span><ShieldCheck size={15} /> Free no-obligation quote</span><span><Zap size={15} /> Clear upfront pricing</span><span><Recycle size={15} /> Recycled where possible</span></div></div><InnerHeroVisual main={serviceHeroImages[service.slug]} small={heroSlides[serviceIndex % heroSlides.length]} badge={{ icon: <Icon size={20} />, title: 'Handled with care', text: service.title }} alt={`${service.title} across Coventry, Leicester and Birmingham`} /></div></section>
 
     <section className="cp-stats"><div className="container cp-stats-grid">
       <div><span className="cp-stat-ic"><FileCheck2 size={20} /></span><strong>Free</strong><small>No-obligation quote</small></div>
@@ -757,7 +815,7 @@ function AreaPage({ slug }: { slug?: string }) {
     mainEntity: detail.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
   }).replace(/</g, '\\u003c');
   return <>
-    <section className="hero hero-x hero-inner"><div className="container hx-grid"><div className="hx-copy"><div className="eyebrow"><span className="eyebrow-dot" /> Your local clearance team</div><div className="breadcrumb"><a href="#/">Home</a> <ChevronRight size={14} /> <a href="#/areas">Areas</a> <ChevronRight size={14} /> {area.name}</div><h1>Rubbish removal<br /><em>in {area.name}.</em></h1><p>{area.blurb}</p><div className="hero-actions tight"><button className="button button-primary" onClick={() => navigate(`/quote?postcode=${detail.prefix}`)}>Book your collection <ArrowRight size={18} /></button><a className="hero-phone" href={`tel:${PHONE}`}><Phone size={16} /> {PHONE}</a></div><div className="hero-points"><span><MapPin size={15} /> {detail.postcodes}</span><span><ShieldCheck size={15} /> Free no-obligation quote</span><span><Zap size={15} /> {area.stat}</span></div></div><InnerHeroVisual main={detail.image} map={{ slug: area.slug, name: area.name }} small={heroSlides[(areas.indexOf(area) + 1) % heroSlides.length]} badge={{ icon: <MapPin size={20} />, title: area.name, text: area.stat }} /></div></section>
+    <section className="hero hero-x hero-inner"><div className="container hx-grid"><div className="hx-copy"><div className="eyebrow"><span className="eyebrow-dot" /> Your local clearance team</div><div className="breadcrumb"><a href="/" onClick={onSpaLink('/')}>Home</a> <ChevronRight size={14} /> <a href="/areas" onClick={onSpaLink('/areas')}>Areas</a> <ChevronRight size={14} /> {area.name}</div><h1>Rubbish removal<br /><em>in {area.name}.</em></h1><p>{area.blurb}</p><div className="hero-actions tight"><button className="button button-primary" onClick={() => navigate(`/quote?postcode=${detail.prefix}`)}>Book your collection <ArrowRight size={18} /></button><a className="hero-phone" href={`tel:${PHONE}`}><Phone size={16} /> {PHONE}</a></div><div className="hero-points"><span><MapPin size={15} /> {detail.postcodes}</span><span><ShieldCheck size={15} /> Free no-obligation quote</span><span><Zap size={15} /> {area.stat}</span></div></div><InnerHeroVisual main={detail.image} map={{ slug: area.slug, name: area.name }} small={heroSlides[(areas.indexOf(area) + 1) % heroSlides.length]} badge={{ icon: <MapPin size={20} />, title: area.name, text: area.stat }} alt={`Rubbish removal and waste clearance in ${area.name}`} /></div></section>
 
     <section className="cp-stats"><div className="container cp-stats-grid">
       <div><span className="cp-stat-ic"><MapPin size={20} /></span><strong>{detail.prefix}</strong><small>{detail.postcodes}</small></div>
@@ -816,26 +874,26 @@ function CityServicePage({ slug, serviceSlug }: { slug?: string; serviceSlug?: s
     { q: `Do you recycle what you collect in ${area.name}?`, a: 'Yes. We reuse, donate and recycle wherever possible before anything is sent for disposal.' },
     ...(sd?.faqs.slice(0, 2) ?? []),
   ];
-  const origin = typeof window !== 'undefined' ? window.location.origin : '';
   const graph = JSON.stringify({
     '@context': 'https://schema.org',
     '@graph': [
       { '@type': 'BreadcrumbList', itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
-        { '@type': 'ListItem', position: 2, name: area.name, item: `${origin}/#/areas/${area.slug}` },
-        { '@type': 'ListItem', position: 3, name: service.title, item: `${origin}/#/areas/${area.slug}/${service.slug}` },
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+        { '@type': 'ListItem', position: 2, name: 'Areas', item: `${SITE_URL}/areas` },
+        { '@type': 'ListItem', position: 3, name: area.name, item: `${SITE_URL}/areas/${area.slug}` },
+        { '@type': 'ListItem', position: 4, name: service.title, item: `${SITE_URL}/areas/${area.slug}/${service.slug}` },
       ] },
-      { '@type': 'Service', name: `${service.title} in ${area.name}`, serviceType: service.title, description: service.description, areaServed: { '@type': 'City', name: area.name }, provider: { '@type': 'LocalBusiness', name: 'Xpress Waste Removals' } },
+      { '@type': 'Service', name: `${service.title} in ${area.name}`, serviceType: service.title, description: service.description, url: `${SITE_URL}/areas/${area.slug}/${service.slug}`, areaServed: { '@type': 'City', name: area.name }, provider: { '@type': 'LocalBusiness', name: 'Xpress Waste Removals', telephone: '+447418628510', url: `${SITE_URL}/` } },
       { '@type': 'FAQPage', mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
     ],
   }).replace(/</g, '\\u003c');
   const facts: [string, string][] = [
     ['Service', service.title], ['Area covered', `All of ${area.name} (${detail.postcodes})`], ['Pricing', 'Free, no-obligation quote with clear upfront pricing'],
-    ['Licensing', 'Licensed waste carrier, fully insured'], ['Waste handling', 'Reuse, donate and recycle first'], ['How to book', 'Request a quote online with your postcode'],
+    ['Licensing', 'Environment Agency licensed waste carrier, fully insured'], ['Waste handling', 'Reuse, donate and recycle first'], ['How to book', `Request a quote online or call ${PHONE}`],
   ];
   return <>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: graph }} />
-    <section className="hero hero-x hero-inner"><div className="container hx-grid"><div className="hx-copy"><div className="eyebrow"><span className="eyebrow-dot" /> {area.name} · {service.eyebrow}</div><nav className="breadcrumb" aria-label="Breadcrumb"><a href="#/">Home</a> <ChevronRight size={14} /> <a href="#/areas">Areas</a> <ChevronRight size={14} /> <a href={`#/areas/${area.slug}`}>{area.name}</a> <ChevronRight size={14} /> {service.title}</nav><h1>{service.title}<br /><em>in {area.name}.</em></h1><p>{service.description} Serving every {detail.prefix} postcode across {area.name}.</p><div className="hero-actions tight"><button className="button button-primary" onClick={() => navigate(`/quote?service=${service.slug}&postcode=${detail.prefix}`)}>Get a free quote <ArrowRight size={18} /></button><a className="hero-phone" href={`tel:${PHONE}`}><Phone size={16} /> {PHONE}</a></div><div className="hero-points"><span><MapPin size={15} /> {detail.postcodes}</span><span><ShieldCheck size={15} /> Licensed &amp; insured</span><span><Recycle size={15} /> Recycled where possible</span></div></div><InnerHeroVisual main={serviceHeroImages[service.slug]} small={detail.image} badge={{ icon: <Icon size={20} />, title: area.name, text: service.title }} /></div></section>
+    <section className="hero hero-x hero-inner"><div className="container hx-grid"><div className="hx-copy"><div className="eyebrow"><span className="eyebrow-dot" /> {area.name} · {service.eyebrow}</div><nav className="breadcrumb" aria-label="Breadcrumb"><a href="/" onClick={onSpaLink('/')}>Home</a> <ChevronRight size={14} /> <a href="/areas" onClick={onSpaLink('/areas')}>Areas</a> <ChevronRight size={14} /> <a href={`/areas/${area.slug}`} onClick={onSpaLink(`/areas/${area.slug}`)}>{area.name}</a> <ChevronRight size={14} /> {service.title}</nav><h1>{service.title}<br /><em>in {area.name}.</em></h1><p>{service.description} Serving every {detail.prefix} postcode across {area.name}.</p><div className="hero-actions tight"><button className="button button-primary" onClick={() => navigate(`/quote?service=${service.slug}&postcode=${detail.prefix}`)}>Get a free quote <ArrowRight size={18} /></button><a className="hero-phone" href={`tel:${PHONE}`}><Phone size={16} /> {PHONE}</a></div><div className="hero-points"><span><MapPin size={15} /> {detail.postcodes}</span><span><ShieldCheck size={15} /> Licensed &amp; insured</span><span><Recycle size={15} /> Recycled where possible</span></div></div><InnerHeroVisual main={serviceHeroImages[service.slug]} small={detail.image} badge={{ icon: <Icon size={20} />, title: area.name, text: service.title }} alt={`${service.title} in ${area.name} — Xpress Waste Removals`} /></div></section>
 
     <section className="cp-stats"><div className="container cp-stats-grid">
       <div><span className="cp-stat-ic"><MapPin size={20} /></span><strong>{detail.prefix}</strong><small>{detail.postcodes}</small></div>
@@ -868,7 +926,7 @@ function CityServicePage({ slug, serviceSlug }: { slug?: string; serviceSlug?: s
 }
 
 function IndexHero({ eyebrow, crumb, title, accent, text, badge }: { eyebrow: string; crumb: string; title: string; accent: string; text: string; badge: { icon: ReactNode; title: string; text: string } }) {
-  return <section className="hero hero-x hero-inner"><div className="container hx-grid"><div className="hx-copy"><div className="eyebrow"><span className="eyebrow-dot" /> {eyebrow}</div><nav className="breadcrumb" aria-label="Breadcrumb"><a href="#/">Home</a> <ChevronRight size={14} /> {crumb}</nav><h1>{title}<br /><em>{accent}</em></h1><p>{text}</p><div className="hero-actions tight"><button className="button button-primary" onClick={() => navigate('/quote')}>Get a free quote <ArrowRight size={18} /></button><a className="hero-phone" href={`tel:${PHONE}`}><Phone size={16} /> {PHONE}</a></div><div className="hero-points"><span><ShieldCheck size={15} /> Licensed &amp; insured</span><span><Zap size={15} /> Clear upfront pricing</span><span><Recycle size={15} /> Recycled where possible</span></div></div><InnerHeroVisual main={heroSlides[0]} small={heroSlides[1]} badge={badge} /></div></section>;
+  return <section className="hero hero-x hero-inner"><div className="container hx-grid"><div className="hx-copy"><div className="eyebrow"><span className="eyebrow-dot" /> {eyebrow}</div><nav className="breadcrumb" aria-label="Breadcrumb"><a href="/" onClick={onSpaLink('/')}>Home</a> <ChevronRight size={14} /> {crumb}</nav><h1>{title}<br /><em>{accent}</em></h1><p>{text}</p><div className="hero-actions tight"><button className="button button-primary" onClick={() => navigate('/quote')}>Get a free quote <ArrowRight size={18} /></button><a className="hero-phone" href={`tel:${PHONE}`}><Phone size={16} /> {PHONE}</a></div><div className="hero-points"><span><ShieldCheck size={15} /> Licensed &amp; insured</span><span><Zap size={15} /> Clear upfront pricing</span><span><Recycle size={15} /> Recycled where possible</span></div></div><InnerHeroVisual main={heroSlides[0]} small={heroSlides[1]} badge={badge} alt={`${title} — Xpress Waste Removals UK`} /></div></section>;
 }
 
 function CityServiceMatrix() {
@@ -889,7 +947,7 @@ function ServicesIndexPage() {
   const graph = JSON.stringify({
     '@context': 'https://schema.org',
     '@graph': [
-      { '@type': 'ItemList', name: 'Xpress Waste Removals services', itemListElement: services.map((x, i) => ({ '@type': 'ListItem', position: i + 1, name: x.title, url: `${typeof window !== 'undefined' ? window.location.origin : ''}/#/services/${x.slug}` })) },
+      { '@type': 'ItemList', name: 'Xpress Waste Removals UK services', itemListElement: services.map((x, i) => ({ '@type': 'ListItem', position: i + 1, name: x.title, url: `${SITE_URL}/services/${x.slug}` })) },
       { '@type': 'FAQPage', mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
     ],
   }).replace(/</g, '\\u003c');
@@ -981,22 +1039,24 @@ function Footer() {
     <div className="footer-glow" aria-hidden="true" />
     <div className="container footer-grid">
       <div className="footer-about">
-        <button className="brand footer-brand" onClick={() => navigate('/')}><BrandLogo className="brand-logo" /></button>
-        <p>Reliable waste removal with a lighter footprint. Serving the Midlands with care.</p>
+        <a className="brand footer-brand" href="/" onClick={onSpaLink('/')} aria-label="Xpress Waste Removals home"><BrandLogo className="brand-logo" /></a>
+        <p>Environment Agency licensed UK waste removal &amp; rubbish clearance across Coventry, Leicester and Birmingham. Reuse and recycling first.</p>
         <div className="footer-socials">
           <span role="img" aria-label="LinkedIn">in</span>
           <span role="img" aria-label="Facebook">f</span>
           <span role="img" aria-label="Instagram">◎</span>
         </div>
-        <button className="footer-quote" onClick={() => navigate('/quote')}>Get a free quote <ArrowRight size={15} /></button>
+        <a className="footer-quote" href="/quote" onClick={onSpaLink('/quote')}>Get a free quote <ArrowRight size={15} /></a>
       </div>
       <div>
         <strong>Services</strong>
-        {services.map((service) => <button key={service.slug} onClick={() => navigate(`/services/${service.slug}`)}><ChevronRight size={13} /> {service.title}</button>)}
+        <a href="/services" onClick={onSpaLink('/services')}><ChevronRight size={13} /> All services</a>
+        {services.map((service) => <a key={service.slug} href={`/services/${service.slug}`} onClick={onSpaLink(`/services/${service.slug}`)}><ChevronRight size={13} /> {service.title}</a>)}
       </div>
       <div>
         <strong>Areas we cover</strong>
-        {areas.map((area) => <button key={area.slug} onClick={() => navigate(`/areas/${area.slug}`)}><MapPin size={13} /> {area.name}</button>)}
+        <a href="/areas" onClick={onSpaLink('/areas')}><MapPin size={13} /> All UK areas</a>
+        {areas.map((area) => <a key={area.slug} href={`/areas/${area.slug}`} onClick={onSpaLink(`/areas/${area.slug}`)}><MapPin size={13} /> Rubbish removal {area.name}</a>)}
       </div>
       <div>
         <strong>Get in touch</strong>
@@ -1005,8 +1065,8 @@ function Footer() {
       </div>
     </div>
     <div className="container footer-bottom">
-      <span>© 2025 Xpress Waste Removals. All rights reserved.</span>
-      <span>Reuse and recycle first</span>
+      <span>© 2026 Xpress Waste Removals. All rights reserved.</span>
+      <span>Licensed UK waste carrier · Reuse &amp; recycle first</span>
     </div>
   </footer>;
 }
