@@ -594,6 +594,7 @@ function App() {
           </div>
           <div className="nav-actions">
             <a className="nav-phone" href={`tel:${PHONE}`}><span className="nav-phone-icon"><Phone size={16} /></span>{PHONE}</a>
+            <button type="button" className="nav-cta" onClick={() => { navigate('/quote'); closeNav(); }}>Get a free quote <ArrowRight size={16} /></button>
           </div>
         </nav>
       </header>
