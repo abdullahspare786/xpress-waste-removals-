@@ -2140,6 +2140,9 @@ a, button, summary, input, select, textarea, label {
 .nav-mobile-bar {
   display: none;
 }
+.nav-phone-mobile {
+  display: none;
+}
 
 /* ===== Unified desktop & mobile header (same clean style at top and when scrolled) ===== */
 .header-sticky.on-home {
@@ -2180,12 +2183,71 @@ a, button, summary, input, select, textarea, label {
 }
 
 @media (min-width: 801px) {
+  .header-sticky .nav-phone {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .12);
+    border: 1px solid rgba(255, 255, 255, .26);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background .2s ease, border-color .2s ease, transform .2s ease;
+  }
+  .header-sticky .nav-phone:hover {
+    background: rgba(255, 255, 255, .2);
+    border-color: rgba(125, 211, 252, .6);
+    transform: translateY(-1px);
+  }
+  .header-sticky .nav-phone-icon {
+    width: auto;
+    height: auto;
+    background: none;
+    color: #5eead4;
+  }
+  .header-sticky .nav-phone-icon::after {
+    display: none;
+  }
   .header-sticky.is-scrolled .nav.container {
-    width: min(1040px, calc(100% - 48px));
+    width: min(1140px, calc(100% - 32px));
     height: 60px;
     padding: 0 12px 0 18px;
     -webkit-backdrop-filter: saturate(160%) blur(14px);
     backdrop-filter: saturate(160%) blur(14px);
+  }
+  .header-sticky.is-scrolled .nav-phone {
+    height: 40px;
+    padding: 0 14px;
+    gap: 7px;
+    font-size: 13.5px;
+    color: #0b1b33;
+    background: rgba(11, 27, 51, .07);
+    border-color: rgba(11, 27, 51, .16);
+  }
+  .header-sticky.is-scrolled .nav-phone:hover {
+    background: rgba(14, 165, 233, .14);
+    border-color: rgba(14, 165, 233, .45);
+    color: #0369a1;
+  }
+  .header-sticky.is-scrolled .nav-phone-icon {
+    background: none;
+    color: #0369a1;
+  }
+  @media (max-width: 1020px) {
+    .header-sticky .nav-phone {
+      padding: 0 12px;
+      font-size: 13px;
+    }
+    .header-sticky .nav-links > button:not(.nav-cta),
+    .header-sticky .nav-dropdown > button {
+      padding: 9px 12px;
+      font-size: 14px;
+    }
   }
   .header-sticky .nav-dropdown.is-open .dropdown-panel {
     opacity: 1;
@@ -2547,11 +2609,44 @@ a, button, summary, input, select, textarea, label {
     border-bottom-color: #cbd5e1;
   }
 
+  .header-sticky .nav-phone-mobile {
+    display: flex;
+    width: 100%;
+    min-height: 46px;
+    margin: 10px 0 0;
+    padding: 11px 16px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    color: #fff;
+    background: #ffffff14;
+    border: 1px solid #ffffff26;
+    transition: background .15s ease, transform .15s ease;
+  }
+  .header-sticky .nav-phone-mobile svg {
+    color: #5eead4;
+  }
+  .header-sticky .nav-phone-mobile:active {
+    background: #ffffff24;
+    transform: scale(.98);
+  }
+  .header-sticky.is-scrolled .nav-phone-mobile {
+    color: #0b1b33;
+    background: #0b1b330d;
+    border-color: #0b1b331c;
+  }
+  .header-sticky.is-scrolled .nav-phone-mobile svg {
+    color: #0369a1;
+  }
   .header-sticky .nav-cta-mobile {
     display: flex !important;
     width: 100%;
     min-height: 48px;
-    margin: 10px 0 0;
+    margin: 8px 0 0;
     padding: 12px 18px !important;
     justify-content: center;
     align-items: center;

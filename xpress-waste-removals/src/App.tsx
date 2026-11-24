@@ -590,6 +590,7 @@ function App() {
               </div>
             </div>
             <button type="button" onClick={() => { goWhyUs(); closeNav(); }}>Why Xpress</button>
+            <a className="nav-phone-mobile" href={`tel:${PHONE}`} onClick={closeNav}><Phone size={16} /> Call {PHONE}</a>
             <button type="button" className="nav-cta nav-cta-mobile" onClick={() => { navigate('/quote'); closeNav(); }}>Get a free quote <ArrowRight size={16} /></button>
           </div>
           <div className="nav-actions">
