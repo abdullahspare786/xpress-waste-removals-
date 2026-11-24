@@ -123,56 +123,56 @@ type ServiceDetail = { intro: string; takes: string[]; faqs: { q: string; a: str
 
 const serviceDetails: Record<string, ServiceDetail> = {
   'house-clearance': {
-    intro: 'Whether you are clearing a loved one’s home, preparing a rental for new tenants or simply reclaiming a cluttered loft, we handle the sorting, lifting and removal so the whole thing feels manageable.',
-    takes: ['Furniture and bedding', 'Boxes, books and household clutter', 'Loft, cellar and garage contents', 'Carpets and flooring', 'Broken or unwanted fittings'],
+    intro: 'Whether you need a sensitive probate or bereavement house clearance, an end-of-tenancy landlord clear-out, or a cluttered loft, garage or cellar emptied, our Environment Agency licensed UK crew handles all lifting, sorting and sweeping — faster and easier than skip hire.',
+    takes: ['Sofas, beds, wardrobes & household furniture', 'Loft, attic, cellar & garage clear-out items', 'End-of-tenancy & landlord clearance rubbish', 'Probate & bereavement property contents', 'Carpets, underlay, rugs & old flooring', 'Books, clothes, boxes & general household junk', 'Kitchen cupboards, fittings & DIY offcuts', 'White goods, electricals & WEEE items'],
     faqs: [
-      { q: 'Can you clear a whole property in one day?', a: 'Most single-property clearances can be completed in a day. Tell us about the size and access in your quote request and we will plan the right crew and timings.' },
-      { q: 'Do I need to be there?', a: 'We can work with keyholders, agents and solicitors, so you do not always have to be on site. Just let us know the arrangements when you enquire.' },
-      { q: 'What happens to my items?', a: 'We reuse, donate and recycle whatever we can before anything is sent for disposal.' },
+      { q: 'Can you clear a whole house or flat in one day?', a: 'Yes. Most 2, 3 and 4-bedroom UK house clearances are completed in a single day, with same-day and next-day slots available across Coventry, Leicester and Birmingham.' },
+      { q: 'Do I need to be on site for a probate or landlord house clearance?', a: 'No. We regularly work with executors, solicitors, estate agents and landlords using keyholders, and can send before-and-after photos once the property is swept clean.' },
+      { q: 'What happens to reusable furniture and household items?', a: 'Reuse and recycling come first. Good-condition furniture and household goods are separated for charity donation and reuse, with remaining materials sorted at licensed UK recycling facilities.' },
     ],
   },
   'garden-waste-removal': {
-    intro: 'Overgrown borders, felled branches, an old shed or a pile of rubble — we clear the lot and leave your outdoor space ready to enjoy again.',
-    takes: ['Hedge trimmings and branches', 'Soil, turf and green waste', 'Old sheds, fencing and decking', 'Garden furniture and play equipment', 'Paving and light rubble'],
+    intro: 'From overgrown hedges, felled branches and bagged green waste to old sheds, rotten fencing, decking, soil and patio rubble — our two-person garden clearance crew loads everything straight onto our van with no council skip permit required.',
+    takes: ['Hedge trimmings, branches & tree cuttings', 'Grass cuttings, leaves & bagged green waste', 'Soil, turf, hardcore & light builders rubble', 'Dismantled sheds, greenhouses & summerhouses', 'Old timber fencing, posts & wooden decking', 'Garden furniture, BBQs & trampolines', 'Plant pots, patio slabs & outdoor clutter', 'Alleyway & side-passage rubbish clearance'],
     faqs: [
-      { q: 'Do you do one-off garden clear-ups?', a: 'Yes. We handle one-off tidy-ups as well as seasonal clearances.' },
-      { q: 'Can you remove heavy items like paving or soil?', a: 'Yes, tell us roughly how much there is and where it is, and we will plan the load accordingly.' },
-      { q: 'Is the waste disposed of responsibly?', a: 'Green waste is separated and taken to appropriate facilities wherever possible.' },
+      { q: 'Do you do one-off garden waste clearances without a skip?', a: 'Yes. Our man-and-van garden clearance is faster and easier than hiring a skip — no council permit, no skip on your drive, and we do all the bagging and loading.' },
+      { q: 'Can you remove heavy garden waste like soil, slabs or old sheds?', a: 'Yes. Tell us roughly how much soil, rubble or shed timber you have and where access is, and we will give you a clear upfront price.' },
+      { q: 'Is green waste recycled responsibly in the UK?', a: 'Yes. Green waste, wood and metal are separated and taken to licensed UK composting and recycling transfer stations wherever possible.' },
     ],
   },
   'furniture-appliance-removal': {
-    intro: 'Old sofa, worn-out wardrobe or a fridge that has seen better days — we collect bulky items from any room, carry them out and take care of the rest.',
-    takes: ['Sofas, armchairs and mattresses', 'Beds, wardrobes and tables', 'Fridges, freezers and cookers', 'Washing machines and dishwashers', 'TVs and other electrical items'],
+    intro: 'Need a single sofa, mattress, wardrobe or American fridge freezer removed without damaging walls or hurting your back? Our licensed UK man-and-van crew collects bulky furniture and WEEE electrical appliances from any room or floor, often on the same day.',
+    takes: ['Sofas, corner suites, armchairs & recliners', 'Beds, bed frames, divans & mattress disposal', 'Wardrobes, drawers, dining tables & chairs', 'Fridge & freezer disposal (WEEE compliant)', 'Washing machines, tumble dryers & dishwashers', 'Cookers, ovens, microwaves & white goods', 'TVs, monitors & household electrical items', 'Single-item or full-room bulky waste removal'],
     faqs: [
-      { q: 'Can you collect just one item?', a: 'Absolutely. Single-item collections are no problem, and you will still get a clear price.' },
-      { q: 'Do you disconnect appliances?', a: 'Please make sure appliances are disconnected before we arrive. If you are unsure, mention it in your quote request.' },
-      { q: 'Can you collect from upstairs?', a: 'Yes, our team lifts and carries from any floor. Let us know about stairs or lifts so we can plan ahead.' },
+      { q: 'Can you collect a single sofa, mattress or fridge?', a: 'Yes. Single-item furniture and appliance collections are available 7 days a week with clear upfront pricing — no minimum skip charge.' },
+      { q: 'Do you handle WEEE compliant fridge and freezer disposal?', a: 'Yes. Fridges, freezers and electrical appliances are taken to licensed UK WEEE recycling facilities. Please ensure plumbed or hard-wired appliances are disconnected before arrival.' },
+      { q: 'Can you collect heavy furniture from upstairs flats?', a: 'Yes, our two-person team lifts and carries from any floor, including flats and apartments. Just mention stairs or lifts when requesting your free quote.' },
     ],
   },
   'moving-service': {
-    intro: 'A friendly extra pair of hands for local moves, awkward deliveries and the things that simply will not fit in the car.',
-    takes: ['Flat and small-house moves', 'Single-item collection and delivery', 'Furniture shifted between rooms or properties', 'Marketplace and second-hand purchases', 'Student and short-distance moves'],
+    intro: 'Friendly, reliable local man-and-van moving help across Coventry, Leicester, Birmingham and the Midlands — ideal for flat moves, student moves, eBay/Facebook Marketplace pickups and bulky single-item deliveries.',
+    takes: ['Flat, studio & small house moves', 'Student accommodation & university moves', 'Facebook Marketplace, Gumtree & eBay pickups', 'Single-item sofa, bed & appliance deliveries', 'Furniture moved between rooms or properties', 'Storage unit loading & unloading', 'Short-distance Midlands van & crew hire', 'Careful blanket-wrapped loading & unloading'],
     faqs: [
-      { q: 'Do you handle full house moves?', a: 'We are best suited to local and smaller moves. Tell us the details and we will let you know honestly if we are the right fit.' },
-      { q: 'Can you collect something I bought online?', a: 'Yes, we can collect and deliver single items for you.' },
-      { q: 'Is loading and unloading included?', a: 'Careful loading and unloading is part of the service.' },
+      { q: 'Do you handle local flat and student moves?', a: 'Yes. We specialise in local home, flat and student moves across Coventry, Leicester, Birmingham and nearby towns, with careful loading and unloading included.' },
+      { q: 'Can you collect and deliver a single bulky item I bought online?', a: 'Yes. We collect and deliver sofas, wardrobes, beds and appliances bought from online marketplaces or local stores.' },
+      { q: 'Are loading and unloading included in the price?', a: 'Yes, our crew handles the careful lifting, loading, transport and unloading at both ends with a clear upfront price.' },
     ],
   },
   'office-commercial-clearance': {
-    intro: 'Office moves, closed-down shops and tenant exits need to be handled quickly and with minimum disruption. We work around your timetable, including out-of-hours.',
-    takes: ['Desks, chairs and filing cabinets', 'IT equipment and electricals', 'Shop fittings and shelving', 'Warehouse and storage clearances', 'Building site and refurbishment waste'],
+    intro: 'Fast, compliant UK commercial waste clearance for offices, retail shops, warehouses, landlords, estate agents and refurbishment sites. Out-of-hours collections available, with Environment Agency licensed disposal and Waste Transfer Notes provided.',
+    takes: ['Office desks, swivel chairs & filing cabinets', 'WEEE IT equipment, monitors & printers', 'Shop fittings, display units & retail shelving', 'Warehouse pallets, packaging & stock clearance', 'Builders waste, wood, metal & refurbishment rubble', 'Commercial landlord & dilapidation clearances', 'Wait-and-load city centre waste collections', 'Licensed disposal with Waste Transfer Notes'],
     faqs: [
-      { q: 'Can you work outside business hours?', a: 'Yes, out-of-hours and weekend appointments are available.' },
-      { q: 'Do you handle old IT equipment?', a: 'We can remove IT equipment. Mention it in your request so we can arrange responsible disposal.' },
-      { q: 'Can you quote for regular collections?', a: 'Tell us what you need in the quote form and we will come back with options.' },
+      { q: 'Do you provide Waste Transfer Notes for commercial clearances?', a: 'Yes. As an Environment Agency licensed UK waste carrier, we provide Waste Transfer Notes so your business stays fully compliant with Duty of Care regulations.' },
+      { q: 'Can you clear offices or shops outside business hours?', a: 'Yes. Evening, early-morning and weekend appointments are available so your business runs without disruption.' },
+      { q: 'Do you handle builders waste and refurbishment rubbish?', a: 'Yes. Our wait-and-load vans clear wood, packaging, fixtures and refurbishment waste quickly — ideal for city-centre sites where skips cannot be placed.' },
     ],
   },
   'recycling-responsible-disposal': {
-    intro: 'Getting rid of things should not mean filling a landfill. We sort every load, pass on reusable items and send the rest to the right facilities.',
-    takes: ['Reusable furniture for donation', 'Metals, cardboard and wood', 'Electricals and appliances', 'Mixed household waste', 'Green waste'],
+    intro: 'Responsible UK rubbish disposal that puts reuse and recycling first. Every load is hand-sorted so usable furniture goes to good homes and recyclables go to licensed UK transfer stations — keeping maximum waste out of landfill.',
+    takes: ['Reusable furniture & goods for charity donation', 'Scrap metal, copper, steel & aluminium', 'Clean wood, timber & pallets for recycling', 'Cardboard, paper & commercial packaging', 'WEEE electricals, cables & white goods', 'Green garden waste for composting', 'Mixed household & general rubbish sorting', 'Licensed disposal with full Duty of Care'],
     faqs: [
-      { q: 'How do you decide what gets recycled?', a: 'We sort each load by material and send items for reuse or recycling wherever that is possible.' },
-      { q: 'Can you donate items for me?', a: 'Where items are in good condition, we will aim to pass them on for reuse.' },
+      { q: 'How much of the waste you collect is recycled or reused?', a: 'We sort every load by material — donating reusable items and sending wood, metal, cardboard, electricals and green waste to licensed UK recycling facilities before anything goes to disposal.' },
+      { q: 'How do I know my rubbish will not be fly-tipped?', a: 'Xpress Waste Removals is an Environment Agency licensed, fully insured UK waste carrier. Every load is taken only to authorised transfer and recycling facilities.' },
     ],
   },
 };
@@ -184,57 +184,57 @@ type AreaDetail = {
 
 const areaDetails: Record<string, AreaDetail> = {
   coventry: {
-    postcodes: 'All CV postcodes', prefix: 'CV', image: '/hero-crew.webp', tagline: 'Clearances, done the Coventry way.',
+    postcodes: 'All CV1–CV6 & Warwickshire postcodes', prefix: 'CV', image: '/hero-crew.webp', tagline: 'Clearances, done the Coventry way.',
     places: ['Earlsdon', 'Cheylesmore', 'Foleshill', 'Binley', 'Tile Hill', 'Allesley'],
-    intro: 'From terraced streets in Earlsdon to family homes in Cheylesmore, our Coventry crews keep collections friendly, punctual and tidy.',
-    feel: 'Coventry is a city of busy family homes, student lets and growing businesses. Whether it is a loft full of boxes or a landlord turnaround, we turn up on time, load carefully and leave the space clean.',
-    highlights: ['House, loft and garage clear-outs', 'Landlord and end-of-tenancy clearances', 'Furniture and appliance collections', 'Garden and green waste removal'],
+    intro: 'From terraced streets in Earlsdon to family homes in Cheylesmore, Nuneaton, Kenilworth, Warwick and Leamington Spa, our Coventry rubbish removal crews keep collections same-day, punctual and tidy.',
+    feel: 'Coventry is a city of busy family homes, university student lets and growing businesses. Whether it is a loft full of boxes, garden waste, builders rubbish or a landlord turnaround across CV1–CV6, we turn up on time, load carefully and sweep up — no skip permit needed.',
+    highlights: ['Same-day house, loft and garage clear-outs in CV postcodes', 'Landlord, student and probate clearances across Coventry', 'Sofa, mattress, fridge & WEEE appliance removal', 'Garden waste, shed & builders rubble clearance'],
     spots: [
       { name: 'Earlsdon', note: 'Period terraces and busy family homes' }, { name: 'Cheylesmore', note: 'Family homes and garden clear-ups' },
       { name: 'Foleshill', note: 'Homes, shops and small businesses' }, { name: 'Binley', note: 'Suburban houses and garages' },
       { name: 'Tile Hill', note: 'Family homes and garden waste' }, { name: 'Allesley', note: 'Larger homes and outdoor clearances' },
     ],
     faqs: [
-      { q: 'Do you cover all of Coventry?', a: 'We cover all areas of Coventry, across every CV postcode, including Earlsdon, Cheylesmore, Foleshill, Binley, Tile Hill and Allesley.' },
-      { q: 'How do I get a price for rubbish removal in Coventry?', a: 'Send your postcode and what needs to go through our free quote form. We give you a clear, upfront price with no hidden fees.' },
-      { q: 'What can you take in Coventry?', a: 'House and garden clearances, furniture and appliances, office and commercial clearances, and moving help. Ask us if your item is not listed.' },
-      { q: 'Do you recycle what you collect?', a: 'Yes. We reuse, donate and recycle wherever possible before anything is sent for disposal.' },
+      { q: 'Do you cover all of Coventry and surrounding CV postcodes?', a: 'Yes. We provide same-day and scheduled rubbish removal across every CV postcode including Earlsdon, Cheylesmore, Foleshill, Binley, Tile Hill, Allesley, Nuneaton, Bedworth, Kenilworth, Warwick and Leamington Spa.' },
+      { q: 'How much does rubbish removal cost in Coventry?', a: 'Pricing depends on load volume — from single-item sofa or fridge collections to full-van house clearances. Send your CV postcode through our free quote form or call 07418628510 for a clear, upfront price with no hidden fees.' },
+      { q: 'Is your Coventry waste clearance cheaper than hiring a skip?', a: 'For most jobs, yes — there is no Coventry City Council skip permit to pay for, no heavy lifting for you, and you only pay for the exact space your rubbish takes in our van.' },
+      { q: 'Do you recycle what you collect in Coventry?', a: 'Yes. As an Environment Agency licensed UK waste carrier, we reuse, donate and recycle wherever possible before anything is sent for disposal.' },
     ],
   },
   leicester: {
-    postcodes: 'All LE postcodes', prefix: 'LE', image: '/hero-service-house-clearance.webp', tagline: 'Leicester clear-outs without the stress.',
+    postcodes: 'All LE1–LE19 & Leicestershire postcodes', prefix: 'LE', image: '/hero-service-house-clearance.webp', tagline: 'Leicester clear-outs without the stress.',
     places: ['Oadby', 'Aylestone', 'Evington', 'Knighton', 'Braunstone', 'Humberstone'],
-    intro: 'Across Leicester and Leicestershire we help homeowners, landlords and local businesses clear unwanted items without the stress.',
-    feel: 'From Victorian terraces to modern estates and city shops, Leicester has every kind of clearance. Our local team handles the heavy lifting and sorts every load responsibly.',
-    highlights: ['Full and partial house clearances', 'Landlord and probate clearances', 'Shop, office and commercial clear-outs', 'Responsible recycling and disposal'],
+    intro: 'Across Leicester, Oadby, Wigston, Blaby, Hinckley, Loughborough and Leicestershire we help homeowners, landlords and businesses clear unwanted rubbish quickly — faster and easier than skip hire.',
+    feel: 'From Victorian terraces and student houses to modern estates and city-centre shops across LE1–LE19, our local Leicester waste removal team handles all the heavy lifting and sorts every load responsibly.',
+    highlights: ['Full and partial house clearances across all LE postcodes', 'Landlord, end-of-tenancy and probate clearances', 'Shop, office, warehouse & commercial waste clearance', 'Eco-friendly recycling & Waste Transfer Notes'],
     spots: [
       { name: 'Oadby', note: 'Family homes and garden clearances' }, { name: 'Aylestone', note: 'Terraces, flats and garages' },
       { name: 'Evington', note: 'Homes and loft clear-outs' }, { name: 'Knighton', note: 'Larger homes and moves' },
       { name: 'Braunstone', note: 'Family homes and bulky items' }, { name: 'Humberstone', note: 'Homes and local businesses' },
     ],
     faqs: [
-      { q: 'Do you cover all of Leicester?', a: 'We cover all areas of Leicester, across every LE postcode, including Oadby, Aylestone, Evington, Knighton, Braunstone and Humberstone.' },
-      { q: 'How do I get a price for rubbish removal in Leicester?', a: 'Send your postcode and what needs to go through our free quote form. We give you a clear, upfront price with no hidden fees.' },
-      { q: 'Do you help landlords and businesses in Leicester?', a: 'Yes. We handle landlord and probate clearances as well as office and commercial clear-outs, with flexible timings to suit you.' },
-      { q: 'Do you recycle what you collect?', a: 'Yes. We reuse, donate and recycle wherever possible before anything is sent for disposal.' },
+      { q: 'Do you cover all of Leicester and Leicestershire?', a: 'Yes. We cover every LE postcode including Oadby, Wigston, Aylestone, Evington, Knighton, Braunstone, Humberstone, Blaby, Syston, Hinckley and Loughborough.' },
+      { q: 'How do I get a price for rubbish removal in Leicester?', a: 'Send your LE postcode and what needs to go through our free quote form or call 07418628510. We give you a clear, upfront volume-based price with no hidden fees.' },
+      { q: 'Do you offer commercial and landlord clearances in Leicester?', a: 'Yes. We handle landlord, end-of-tenancy and probate clearances as well as office, shop and builders waste clearances with Waste Transfer Notes and out-of-hours slots.' },
+      { q: 'Do you recycle what you collect in Leicester?', a: 'Yes. We are an Environment Agency licensed waste carrier and prioritise reuse, donation and recycling before disposal.' },
     ],
   },
   birmingham: {
-    postcodes: 'All B postcodes', prefix: 'B', image: '/hero-movers.webp', tagline: 'Birmingham waste removal, made simple.',
+    postcodes: 'All B1–B98 & West Midlands postcodes', prefix: 'B', image: '/hero-movers.webp', tagline: 'Birmingham waste removal, made simple.',
     places: ['Edgbaston', 'Harborne', 'Moseley', 'Kings Heath', 'Selly Oak', 'Sutton Coldfield'],
-    intro: 'From city-centre flats to suburban family homes, our Birmingham team is on hand seven days a week.',
-    feel: 'Birmingham is big, busy and varied, and so are the jobs we take on. From a single sofa to a whole-property clearance, we make it straightforward from first message to final sweep.',
-    highlights: ['City-centre flat and apartment clear-outs', 'Student house and landlord clearances', 'Furniture, appliance and garden waste', 'Moving help and single-item collections'],
+    intro: 'From city-centre flats to suburban family homes across Birmingham, Solihull, Sutton Coldfield and the West Midlands, our licensed rubbish removal team operates 7 days a week with same-day slots.',
+    feel: 'Birmingham is big, busy and varied, and so are the clearances we handle across B1–B98. From a single sofa or fridge to a full house, garden or commercial wait-and-load clearance, we make it effortless from first call to final sweep.',
+    highlights: ['Same-day flat, house & student clearances across B postcodes', 'Wait-and-load city-centre skip hire alternative (no permit)', 'Furniture, mattress, WEEE fridge & garden waste removal', 'Commercial office, retail & builders waste clearance'],
     spots: [
       { name: 'Edgbaston', note: 'Larger homes, flats and moves' }, { name: 'Harborne', note: 'Family homes and flat clearances' },
       { name: 'Moseley', note: 'Period homes and house clear-outs' }, { name: 'Kings Heath', note: 'Terraces, shops and garages' },
       { name: 'Selly Oak', note: 'Student houses and end-of-tenancy' }, { name: 'Sutton Coldfield', note: 'Family homes and gardens' },
     ],
     faqs: [
-      { q: 'Do you cover all of Birmingham?', a: 'We cover all areas of Birmingham, across every B postcode, including Edgbaston, Harborne, Moseley, Kings Heath, Selly Oak and Sutton Coldfield.' },
-      { q: 'How do I get a price for rubbish removal in Birmingham?', a: 'Send your postcode and what needs to go through our free quote form. We give you a clear, upfront price with no hidden fees.' },
-      { q: 'Can you clear a flat or student house?', a: 'Yes. We regularly clear flats, student houses and end-of-tenancy properties, and we can load and carry everything for you.' },
-      { q: 'Do you recycle what you collect?', a: 'Yes. We reuse, donate and recycle wherever possible before anything is sent for disposal.' },
+      { q: 'Do you cover all of Birmingham and the West Midlands?', a: 'Yes. We cover every B postcode across Birmingham including Edgbaston, Harborne, Moseley, Kings Heath, Selly Oak, Sutton Coldfield, Erdington, Solihull and surrounding West Midlands areas.' },
+      { q: 'How much does rubbish removal cost in Birmingham?', a: 'Send your B postcode and what needs removing through our free quote form or call 07418628510 for an instant, transparent quote — pay only for the exact space your waste uses.' },
+      { q: 'Can you clear city-centre flats or student houses in Birmingham?', a: 'Yes. We regularly clear flats, apartments, student houses in Selly Oak and end-of-tenancy properties, carrying everything downstairs and loading our van for you.' },
+      { q: 'Do you recycle what you collect in Birmingham?', a: 'Yes. As an Environment Agency licensed waste carrier, we donate reusable items and sort wood, metal, electricals and green waste at licensed UK recycling centres.' },
     ],
   },
 };
@@ -679,6 +679,7 @@ function Home() {
     </div></section>
     <section className="section areas-home"><div className="container"><div className="section-heading reveal-up"><div><div className="eyebrow dark">Where we work</div><h2>Your local team in<br /><span>three cities.</span></h2></div><p>Pick your city to see the areas we cover, the neighbourhoods we know well and how to book your collection.</p></div><div className="areas-home-grid reveal-up">{areas.map((area) => <button key={area.slug} className="area-card" onClick={() => navigate(`/areas/${area.slug}`)} onMouseMove={tiltMove} onMouseLeave={tiltLeave}><CityMap slug={area.slug} name={area.name} /><span className="area-card-top"><MapPin size={20} /><em>{area.stat}</em></span><strong>{area.name}</strong><span className="area-card-text">{area.blurb}</span><span className="area-card-places">{areaDetails[area.slug].places.slice(0, 4).map((place) => <i key={place}>{place}</i>)}</span><span className="service-link">See {area.name} <ArrowRight size={16} /></span></button>)}</div></div></section>
     <section className="section sv-answer-wrap" aria-labelledby="home-aeo-heading"><div className="container"><div className="sv-answer reveal-up"><span className="sv-answer-ic"><Sparkles size={20} /></span><div><div className="eyebrow dark">UK Waste Removal · Quick Answer</div><h2 id="home-aeo-heading">Who provides licensed, same-day waste removal across Coventry, Leicester &amp; Birmingham?</h2><p>Xpress Waste Removals is an Environment Agency licensed, fully insured UK waste carrier offering same-day and 7-day man-and-van rubbish removal across all CV, LE and B postcodes. Easier and often cheaper than skip hire with no council permit needed, our crews handle house clearances, garden waste, sofas, WEEE appliances, builders rubbish and commercial clearances with upfront pricing — call <a href={`tel:${PHONE}`}>{PHONE}</a> for a free quote.</p></div></div></div></section>
+    <section className="section compare-section" aria-labelledby="compare-heading"><div className="container"><div className="section-heading reveal-up"><div><div className="eyebrow dark">Skip hire alternative UK</div><h2 id="compare-heading">Man &amp; van waste removal<br /><span>vs traditional skip hire.</span></h2></div><p>Why homeowners, landlords and businesses across Coventry, Leicester and Birmingham choose wait-and-load rubbish clearance over hiring a skip.</p></div><div className="compare-table" role="table" aria-label="Xpress Waste Removals compared to skip hire"><div className="compare-row compare-head" role="row"><span role="columnheader">Feature</span><span role="columnheader">Xpress Waste Removals</span><span role="columnheader">Traditional Skip Hire</span></div><div className="compare-row" role="row"><strong role="cell">Heavy lifting &amp; loading</strong><span role="cell" className="cmp-yes"><Check size={15} /> Two-person crew lifts, loads &amp; sweeps</span><span role="cell" className="cmp-no">You load everything yourself</span></div><div className="compare-row" role="row"><strong role="cell">Council road permit</strong><span role="cell" className="cmp-yes"><Check size={15} /> No skip permit required</span><span role="cell" className="cmp-no">Extra council fee &amp; waiting time</span></div><div className="compare-row" role="row"><strong role="cell">Pricing model</strong><span role="cell" className="cmp-yes"><Check size={15} /> Pay only for exact waste volume</span><span role="cell" className="cmp-no">Fixed skip cost even if half-empty</span></div><div className="compare-row" role="row"><strong role="cell">Speed &amp; availability</strong><span role="cell" className="cmp-yes"><Check size={15} /> Same-day &amp; 7-day collections</span><span role="cell" className="cmp-no">Skip sits on driveway for days</span></div><div className="compare-row" role="row"><strong role="cell">Fridges, sofas &amp; WEEE</strong><span role="cell" className="cmp-yes"><Check size={15} /> Collected &amp; recycled legally</span><span role="cell" className="cmp-no">Often banned in standard skips</span></div></div></div></section>
     <section className="section faq-section alt-section"><div className="container faq-layout"><div><div className="eyebrow dark">Good to know</div><h2>Quick<br /><span>answers.</span></h2><p className="faq-side">Still unsure? Call us on <a href={`tel:${PHONE}`}>{PHONE}</a> or send a quote request.</p></div><div className="faq-list">{homeFaqs.map((faq) => <details key={faq.q}><summary>{faq.q}<ChevronDown size={18} /></summary><p>{faq.a}</p></details>)}</div></div></section>
     <CTA />
   </>;
