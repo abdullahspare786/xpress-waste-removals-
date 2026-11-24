@@ -618,7 +618,7 @@ button { cursor: pointer; }
 .take-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
 .take-tabs button { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 999px; border: 1px solid #7dd3fc; background: var(--surface); color: var(--accent-ink); font-size: 12px; font-weight: 600; transition: transform .25s, background .25s, color .25s; }
 .take-tabs button:hover { transform: translateY(-3px); }
-.take-tabs button.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 10px 22px #0284c733; }
+.take-tabs button.active { background: var(--accent-strong); color: #fff; border-color: var(--accent-strong); box-shadow: 0 10px 22px #0369a133; }
 .take-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; padding: 40px; border-radius: 18px; border: 1px solid #93c5fd; background: linear-gradient(165deg, #dbeafe, #bfdbfe); animation: pageEnter .4s ease backwards; }
 .take-panel-copy strong { display: block; font-family: 'Inter', sans-serif; font-size: 26px; color: #0c4a6e; letter-spacing: -.02em; }
 .take-panel-copy p { color: #1e3a5f; font-size: 13px; line-height: 1.7; margin: 12px 0 24px; max-width: 420px; }
