@@ -563,8 +563,7 @@ function App() {
         <nav className="nav container" aria-label="Main navigation">
           <button type="button" className="brand" onClick={() => { navigate('/'); closeNav(); }} aria-label="Xpress Waste Removals home"><BrandLogo className="brand-logo" /></button>
           <div className="nav-mobile-bar">
-            <a className="nav-mobile-phone" href={`tel:${PHONE}`} aria-label={`Call ${PHONE}`}><Phone size={14} /><span>{PHONE}</span></a>
-            <button type="button" className="nav-mobile-quote" onClick={() => { navigate('/quote'); closeNav(); }}>Free quote</button>
+            <a className="nav-mobile-phone" href={`tel:${PHONE}`} aria-label={`Call ${PHONE}`}><Phone size={15} /><span>{PHONE}</span></a>
             <button type="button" className="menu-toggle" onClick={toggleMenu} aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} aria-controls="mobile-nav-menu">{menuOpen ? <X size={20} /> : <Menu size={20} />}</button>
           </div>
           <div id="mobile-nav-menu" className={`nav-links ${menuOpen ? 'open' : ''}`} onMouseMove={lamp} onMouseLeave={(e) => e.currentTarget.classList.remove('lit')}>
@@ -595,7 +594,6 @@ function App() {
           </div>
           <div className="nav-actions">
             <a className="nav-phone" href={`tel:${PHONE}`}><span className="nav-phone-icon"><Phone size={16} /></span>{PHONE}</a>
-            <button type="button" className="nav-cta" onClick={() => { navigate('/quote'); closeNav(); }}>Get a free quote <ArrowRight size={16} /></button>
           </div>
         </nav>
       </header>
