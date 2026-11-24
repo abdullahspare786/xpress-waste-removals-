@@ -619,18 +619,10 @@ const heroSlides = [
   '/hero-movers.webp',
 ];
 
-const crewPhoto = { src: '/hero-crew-clean.webp', alt: '', w: 560, h: 619 };
-
 function HeroCollage() {
   return <div className="hx-visual hx-collage">
     <div className="hx-ring" />
     <HeroCube onOpen={(slug) => navigate(`/services/${slug}`)} />
-    <div className="hx-peek" aria-hidden="true">
-      <span className="hx-peek-frame">
-        <img className="hx-peek-img" src={crewPhoto.src} alt={crewPhoto.alt} width={crewPhoto.w} height={crewPhoto.h} loading="lazy" decoding="async" />
-      </span>
-      <span className="hx-peek-cap"><small>Real crew</small><strong>Meet our team</strong></span>
-    </div>
     <div className="hx-badge hx-b1"><span className="hx-ic"><FileCheck2 size={20} /></span><div><strong>Free quote</strong><small>No obligation</small></div></div>
     <div className="hx-badge hx-b3"><span className="hx-ic"><MapPin size={20} /></span><div><strong>Local team</strong><small>Coventry · Leicester · Birmingham</small></div></div>
   </div>;

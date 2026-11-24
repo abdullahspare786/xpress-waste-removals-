@@ -82,6 +82,22 @@ function seoStaticRoutesPlugin(): Plugin {
         const canonical = `${SITE_URL}${item.route}`;
         const t = escapeHtml(item.title);
         const d = escapeHtml(item.description);
+        const segments = item.route.split('/').filter(Boolean);
+        const crumbItems = [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+          ...segments.map((seg, idx) => ({
+            '@type': 'ListItem',
+            position: idx + 2,
+            name: seg.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+            item: `${SITE_URL}/${segments.slice(0, idx + 1).join('/')}`,
+          })),
+        ];
+        const routeSchema = `<script type="application/ld+json">${JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: crumbItems,
+        }).replace(/</g, '\\u003c')}</script>`;
+
         let html = baseHtml
           .replace(/<title>[\s\S]*?<\/title>/, `<title>${t}</title>`)
           .replace(/<meta name="description" content="[^"]*"\s*\/>/, `<meta name="description" content="${d}" />`)
@@ -93,7 +109,8 @@ function seoStaticRoutesPlugin(): Plugin {
           .replace(/<meta property="og:url" content="[^"]*"\s*\/>/, `<meta property="og:url" content="${canonical}" />`)
           .replace(/<meta name="twitter:title" content="[^"]*"\s*\/>/, `<meta name="twitter:title" content="${t}" />`)
           .replace(/<meta name="twitter:description" content="[^"]*"\s*\/>/, `<meta name="twitter:description" content="${d}" />`)
-          .replace(/<h1>[\s\S]*?<\/h1>/, `<h1>${escapeHtml(item.h1)}</h1>`);
+          .replace(/<h1>[\s\S]*?<\/h1>/, `<h1>${escapeHtml(item.h1)}</h1>`)
+          .replace('</head>', `  ${routeSchema}\n  </head>`);
 
         const outDir = path.join(distDir, item.route.replace(/^\//, ''));
         fs.mkdirSync(outDir, { recursive: true });
