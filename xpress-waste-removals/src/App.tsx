@@ -562,7 +562,11 @@ function App() {
         <header className={`nav-wrap ${isScrolled ? 'is-scrolled' : ''}`}>
         <nav className="nav container" aria-label="Main navigation">
           <button type="button" className="brand" onClick={() => { navigate('/'); closeNav(); }} aria-label="Xpress Waste Removals home"><BrandLogo className="brand-logo" /></button>
-          <button type="button" className="menu-toggle" onClick={toggleMenu} aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} aria-controls="mobile-nav-menu">{menuOpen ? <X size={22} /> : <Menu size={22} />}</button>
+          <div className="nav-mobile-bar">
+            <a className="nav-mobile-phone" href={`tel:${PHONE}`} aria-label={`Call ${PHONE}`}><Phone size={14} /><span>{PHONE}</span></a>
+            <button type="button" className="nav-mobile-quote" onClick={() => { navigate('/quote'); closeNav(); }}>Free quote</button>
+            <button type="button" className="menu-toggle" onClick={toggleMenu} aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} aria-controls="mobile-nav-menu">{menuOpen ? <X size={20} /> : <Menu size={20} />}</button>
+          </div>
           <div id="mobile-nav-menu" className={`nav-links ${menuOpen ? 'open' : ''}`} onMouseMove={lamp} onMouseLeave={(e) => e.currentTarget.classList.remove('lit')}>
             <button type="button" className={onHome ? 'is-active' : undefined} aria-current={onHome ? 'page' : undefined} onClick={() => { navigate('/'); closeNav(); }}>Home</button>
             <div className={`nav-dropdown${onServices ? ' is-active' : ''}${openDropdown === 'services' ? ' is-open' : ''}`} onMouseEnter={() => { if (openDropdown && openDropdown !== 'services') setOpenDropdown(null); }}>
