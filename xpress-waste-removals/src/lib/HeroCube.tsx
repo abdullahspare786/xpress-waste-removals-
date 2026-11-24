@@ -77,6 +77,11 @@ export function HeroCube({ onOpen }: { onOpen?: (slug: string) => void }) {
       host.classList.remove('is-drag');
       if (!wasDown || e.type !== 'pointerup' || !downSlug) return;
       if (Math.hypot(e.clientX - sx, e.clientY - sy) > 10) { lastSlug = ''; return; } // it was a drag, not a tap
+      // Single tap opens immediately on touchscreens; desktop keeps double-click
+      if (e.pointerType === 'touch') {
+        openRef.current?.(downSlug);
+        return;
+      }
       const now = Date.now();
       if (lastSlug === downSlug && now - lastT < 450) { lastSlug = ''; openRef.current?.(downSlug); }
       else { lastSlug = downSlug; lastT = now; }
@@ -123,7 +128,7 @@ export function HeroCube({ onOpen }: { onOpen?: (slug: string) => void }) {
           </div>
         </div>
       </div>
-      <div className="hc-hint">Drag to rotate · double-click to open</div>
+      <div className="hc-hint"><span className="hc-hint-desktop">Drag to rotate · double-click to open</span><span className="hc-hint-touch">Swipe to rotate · tap a side to open</span></div>
     </div>
   );
 }

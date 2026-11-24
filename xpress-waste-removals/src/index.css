@@ -2872,3 +2872,98 @@ a, button, summary, input, select, textarea, label {
     opacity: .92;
   }
 }
+
+/* ===== Deep Mobile Touch & Speed Optimization ===== */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+.hc-hint-touch {
+  display: none;
+}
+
+@media (hover: none), (max-width: 800px) {
+  .hc-hint-desktop {
+    display: none;
+  }
+  .hc-hint-touch {
+    display: inline;
+  }
+}
+
+@media (max-width: 800px) {
+  /* Prevent horizontal wobble on touch swipes */
+  html, body {
+    overflow-x: clip;
+  }
+
+  /* Instant mobile LCP: remove staggered hero fade-in delays so headline & form appear immediately */
+  .hero.hero-x:not(.hero-inner) .hx-title .hx-line > span,
+  .hero.hero-x:not(.hero-inner) .hx-title .hx-line > em,
+  .hero.hero-x:not(.hero-inner) .hx-copy .eyebrow,
+  .hero.hero-x:not(.hero-inner) .hx-copy > p,
+  .hero.hero-x:not(.hero-inner) .hx-copy .rotator,
+  .hero.hero-x:not(.hero-inner) .hx-copy .hx-quote,
+  .hero.hero-x:not(.hero-inner) .hx-copy .hx-links,
+  .hero.hero-x:not(.hero-inner) .hx-copy .hero-points,
+  .hero.hero-x:not(.hero-inner) .hx-visual.hx-collage,
+  .page-enter {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    translate: none !important;
+    scale: none !important;
+  }
+
+  /* Lighter glass blur on mobile scrolled pill (keeps transparent look with 4x lower GPU cost) */
+  .header-sticky.is-scrolled .nav.container {
+    -webkit-backdrop-filter: saturate(150%) blur(8px);
+    backdrop-filter: saturate(150%) blur(8px);
+  }
+
+  /* Lighter HeroCube faces on mobile for locked 60fps rotation */
+  .hc-face {
+    box-shadow: none;
+  }
+
+  /* Isolate marquee paint & layout so scrolling stays smooth */
+  .marquee {
+    contain: layout paint;
+  }
+  .marquee-track {
+    will-change: transform;
+  }
+
+  /* Touch-friendly horizontal swipeable tabs for "What we take" */
+  .take-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+    margin-bottom: 20px;
+  }
+  .take-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .take-tabs button {
+    flex: none;
+    scroll-snap-align: start;
+    white-space: nowrap;
+  }
+
+  /* Keep sticky service jump bar cleanly below the scrolled mobile pill */
+  .sv-jump {
+    top: 72px;
+  }
+
+  /* Remove overlapping floating Quick quote button on mobile (keep clean back-to-top + call FAB) */
+  .xd-quote,
+  .xd-panel {
+    display: none !important;
+  }
+  .footer {
+    padding-bottom: calc(82px + env(safe-area-inset-bottom, 0px));
+  }
+}
